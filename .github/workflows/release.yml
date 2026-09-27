@@ -1,0 +1,55 @@
+name: Build and release
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and run self-tests
+        run: ./build.sh
+      - name: Package universal app
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          version=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' build/WinMouse.app/Contents/Info.plist)
+          expected="${GITHUB_REF_NAME#v}"
+          [[ "$version" == "$expected" ]] || { echo "Tag $GITHUB_REF_NAME does not match app version $version"; exit 1; }
+          archive="WinMouse-${GITHUB_REF_NAME}-macos-universal.zip"
+          ditto -c -k --sequesterRsrc --keepParent build/WinMouse.app "$archive"
+          shasum -a 256 "$archive" > "$archive.sha256"
+      - name: Upload release assets
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-assets
+          path: WinMouse-*.zip*
+          if-no-files-found: error
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: macos-15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: release-assets
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" WinMouse-*.zip WinMouse-*.zip.sha256 --clobber
+          else
+            gh release create "$GITHUB_REF_NAME" WinMouse-*.zip WinMouse-*.zip.sha256 --generate-notes --prerelease
+          fi

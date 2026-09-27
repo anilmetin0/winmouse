@@ -1,0 +1,31 @@
+/* Menu bar */
+"Windows Mouse" = "Windows Faresi";
+"Allow Accessibility Access…" = "Erişilebilirlik İzni Ver…";
+"Settings…" = "Ayarlar…";
+"Quit WinMouse" = "WinMouse'tan Çık";
+"WinMouse Settings" = "WinMouse Ayarları";
+
+/* Settings window. Windows' own Turkish names where they exist. */
+"WinMouse is paused." = "WinMouse duraklatıldı.";
+"Resume" = "Sürdür";
+"Pointer" = "İmleç";
+"Windows pointer movement" = "Windows imleç hareketi";
+"Pointer speed" = "İmleç hızı";
+"Slow" = "Yavaş";
+"Fast" = "Hızlı";
+"Enhance pointer precision" = "İşaretçi hassasiyetini artır";
+"No external mouse connected." = "Harici fare bağlı değil.";
+"Mouse" = "Fare";
+"Another app is changing the mouse: %@. Quit it so the two apps don't undo each other's settings." = "Fareyi değiştiren başka bir uygulama açık: %@. İki uygulama birbirinin ayarlarını bozmasın diye onu kapatın.";
+"Applies to %@." = "%@ için geçerli.";
+"Wheel" = "Tekerlek";
+"Scrolling needs Accessibility access." = "Kaydırma için Erişilebilirlik izni gerekiyor.";
+"Open System Settings…" = "Sistem Ayarları'nı Aç…";
+"Windows scrolling" = "Windows kaydırması";
+"Lines to scroll at a time" = "Bir seferde kaydırılacak satır";
+"Characters to scroll horizontally" = "Yatay kaydırılacak karakter";
+"Smooth scrolling" = "Yumuşak kaydırma";
+"Scrolling direction" = "Kaydırma yönü";
+"Down motion scrolls down" = "Aşağı hareket aşağı kaydırır";
+"Same as trackpad" = "İzleme dörtgeniyle aynı";
+"Open at login" = "Girişte aç";
