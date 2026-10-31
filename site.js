@@ -63,8 +63,8 @@ for (const btn of document.querySelectorAll("[data-copy]")) {
   });
 }
 
-// Version and disk image of the newest release. Versions 0.x are published as prereleases,
-// which /releases/latest skips, so read the list instead. The links work without this.
+// Version and download of the newest release, prereleases included (/releases/latest skips
+// them). The links work without this.
 fetch(`https://api.github.com/repos/${repo}/releases?per_page=10`)
   .then((r) => (r.ok ? r.json() : Promise.reject()))
   .then((list) => {
