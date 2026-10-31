@@ -1,14 +1,12 @@
 # WinMouse
 
-WinMouse aims to give external mice on macOS a Windows-style pointer curve and wheel feel.
+WinMouse makes an external mouse on a Mac behave the way it does on Windows: the same pointer
+curve and speed slider, the same wheel feel, Ctrl + wheel zoom, and side buttons that go back and
+forward. Trackpads keep their macOS behavior.
 
-**Status: experimental.** The curve and scroll calculations pass the included reference-vector
-tests, and the app builds for Apple Silicon and Intel. Pointer and wheel behavior with a physical
-mouse, permission handling, and restoration after a crash still need hardware testing.
-
-macOS and Windows use different pointer acceleration and wheel scrolling. WinMouse applies a
-Windows-derived pointer curve and fixed-distance wheel scrolling to external mice. Trackpads keep
-their macOS behavior.
+**Status: experimental.** The curve, scroll and button mapping pass the included reference-vector
+tests, and the app builds for Apple Silicon and Intel. Behavior with a physical mouse, permission
+handling and restoration after a crash still need hardware testing.
 
 ## Features
 
@@ -24,13 +22,30 @@ Wheel scrolling is designed for a fixed distance per notch (3 lines, 100 points)
 ease-in-out. It does not add speed-based acceleration or momentum. Shift with the wheel scrolls
 sideways. The wheel keeps the Windows direction when the trackpad uses natural scrolling.
 
+Control with the wheel zooms, as Ctrl + wheel does on Windows: each notch away from you presses
+Command-=, each notch toward you Command--. Chrome on the Mac ignores Ctrl + wheel, so keystrokes
+work in Chrome as well as Safari. If macOS Zoom is set to zoom the screen with Control
+and the wheel, WinMouse leaves it alone.
+
 Trackpads, the Magic Mouse's touch scrolling, apps that declare themselves games, and wheel
-gestures with Command, Option or Control keep their macOS behaviour.
+gestures with Command or Option keep their macOS behaviour.
+
+### Buttons
+
+On Windows the side buttons go back and forward in every window. On a Mac, Chrome, Edge, Firefox,
+VS Code and JetBrains IDEs already do that and get the buttons untouched. Finder, Safari, System
+Settings, the App Store, Music, TV and Preview ignore them, so WinMouse presses their Back and
+Forward shortcuts (Command-[ and Command-]; Control-Command-arrow in Xcode). It acts when you
+release the button, as Windows does. Other apps keep the buttons, because Command-[ means indent
+in many of them.
+
+The middle button, right-click and double-click already behave like Windows in macOS browsers
+and are left alone.
 
 ## Requirements
 
 - macOS 14 Sonoma or later.
-- Accessibility access, for the wheel. The pointer needs no permission.
+- Accessibility access, for the wheel and the side buttons. The pointer needs no permission.
 
 ## Install
 
@@ -68,6 +83,8 @@ The settings use Windows names and defaults.
 | Characters to scroll horizontally | Horizontal scrolling | 3 |
 | Smooth scrolling | Smooth scrolling in Chrome and Edge | On, off when Reduce Motion is on |
 | Scrolling direction | Down motion scrolls down | Windows |
+| Control + wheel zooms | Ctrl + wheel zoom | On |
+| Side buttons go back and forward | Back and forward buttons | On |
 
 The menu bar icon pauses and resumes WinMouse.
 
@@ -101,6 +118,9 @@ Known differences from Windows:
   gets a little less acceleration.
 - When the mouse speeds up into a steeper part of the curve, Windows blends the old and new
   segments for one report. A macOS table cannot do that.
+- Side buttons only reach the apps listed above; unknown apps keep the raw buttons.
+- The shortcuts are sent as key positions. On keyboard layouts where `[` or `=` sit on another key,
+  an app that matches shortcuts by character may not react. Tell us which app.
 - WinMouse uses private HID interfaces. A macOS update could change them. If pointer behavior is
   wrong, quit the app and reconnect the mouse or restart the Mac.
 
@@ -118,7 +138,7 @@ constants is in `docs/research`. See the [architecture](docs/architecture.md) an
 
 ## Project status
 
-The available [v0.1.0 prerelease](https://github.com/anilmetin0/winmouse/releases/tag/v0.1.0) is
+The [prereleases](https://github.com/anilmetin0/winmouse/releases) are
 experimental and has no Developer ID signature or notarization.
 See [CHANGELOG.md](CHANGELOG.md) for project history and [releasing.md](docs/releasing.md) for the
 release process. Report security issues using GitHub's private reporting feature; do not publish

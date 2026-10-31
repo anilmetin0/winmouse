@@ -25,7 +25,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     private let state = AppState()
     private let pointer = PointerController()
-    private let scroll = ScrollEngine()
+    private let tap = MouseTap()
     private var statusItem: NSStatusItem?
     private var settingsWindow: NSWindow?
     private var applied: Settings?
@@ -44,7 +44,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             guard let self else { return }
             state.mice = pointer.mice
         }
-        scroll.onPermissionLost = { [weak self] in self?.apply(force: true) }
+        tap.onPermissionLost = { [weak self] in self?.apply(force: true) }
         // Posted on whichever thread wrote, so it is hopped to main; any defaults write lands here,
         // including window frames, and `apply` ignores what isn't a setting.
         NotificationCenter.default.addObserver(
@@ -78,7 +78,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
 
     func applicationWillTerminate(_ notification: Notification) {
-        scroll.stop()
+        tap.stop()
         pointer.restoreAll()
     }
 
@@ -87,14 +87,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         guard force || settings != applied else { return }
         applied = settings
         pointer.apply(settings)
-        let scrolling = scroll.apply(settings)
-        state.needsAccessibility = settings.enabled && settings.scrollEnabled && !scrolling
+        let tapping = tap.apply(settings)
+        state.needsAccessibility = settings.needsTap && !tapping
         statusItem?.button?.appearsDisabled = !settings.enabled
         watchForPermission(state.needsAccessibility)
     }
 
     /// Accessibility has no change notification, so it is polled, and only while it is missing.
-    /// A poll only retries the scroll tap; the pointer side needs no permission.
+    /// A poll only retries the event tap; the pointer side needs no permission.
     private func watchForPermission(_ needed: Bool) {
         guard needed else {
             permissionPoll?.invalidate()
@@ -105,7 +105,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         permissionPoll = Timer.scheduledTimer(withTimeInterval: 2, repeats: true) { [weak self] _ in
             MainActor.assumeIsolated {
                 guard let self, AXIsProcessTrusted() else { return }
-                self.state.needsAccessibility = !self.scroll.apply(Settings.load())
+                self.state.needsAccessibility = !self.tap.apply(Settings.load())
                 self.watchForPermission(self.state.needsAccessibility)
             }
         }
@@ -133,7 +133,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
 
     @objc private func toggleEnabled() {
-        UserDefaults.standard.set(!Settings.load().enabled, forKey: "enabled")
+        UserDefaults.standard.set(!Settings.load().enabled, forKey: Settings.Key.enabled)
     }
 
     @objc func openAccessibilitySettings() {

@@ -19,7 +19,7 @@
 "Another app is changing the mouse: %@. Quit it so the two apps don't undo each other's settings." = "Fareyi değiştiren başka bir uygulama açık: %@. İki uygulama birbirinin ayarlarını bozmasın diye onu kapatın.";
 "Applies to %@." = "%@ için geçerli.";
 "Wheel" = "Tekerlek";
-"Scrolling needs Accessibility access." = "Kaydırma için Erişilebilirlik izni gerekiyor.";
+"The wheel and the side buttons need Accessibility access." = "Tekerlek ve yan tuşlar için Erişilebilirlik izni gerekiyor.";
 "Open System Settings…" = "Sistem Ayarları'nı Aç…";
 "Windows scrolling" = "Windows kaydırması";
 "Lines to scroll at a time" = "Bir seferde kaydırılacak satır";
@@ -28,4 +28,8 @@
 "Scrolling direction" = "Kaydırma yönü";
 "Down motion scrolls down" = "Aşağı hareket aşağı kaydırır";
 "Same as trackpad" = "İzleme dörtgeniyle aynı";
+"Control + wheel zooms" = "Control + tekerlek yakınlaştırır";
+"Buttons" = "Düğmeler";
+"Side buttons go back and forward" = "Yan tuşlar geri ve ileri gider";
+"Finder, Safari and other Apple apps go back and forward too. Games keep their own buttons." = "Finder, Safari ve diğer Apple uygulamaları da geri ve ileri gider. Oyunlar kendi tuşlarını korur.";
 "Open at login" = "Girişte aç";

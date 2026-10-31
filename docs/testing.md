@@ -38,6 +38,14 @@ Check that the log reports the expected raw deltas and sender ID, that wheel mot
 selected direction and line count, and that continuous trackpad/Magic Mouse scrolling stays native.
 Also check Shift-wheel, modifier gestures, a game-category app, and natural scrolling.
 
+Buttons and zoom:
+
+- Side buttons in Chrome, Firefox and VS Code go back/forward once (not twice); in Finder, Safari,
+  System Settings and Preview they go back/forward on release; in Notes nothing happens.
+- Hold a side button, switch apps with Command-Tab, release: no stuck button, no stray shortcut.
+- Control + wheel zooms Safari and Chrome one step per notch, away from you zooms in, with natural
+  scrolling on and off. Test with a non-US keyboard layout (for example Turkish Q) as well.
+
 Finally verify restoration:
 
 1. Pause WinMouse, then quit it; compare the mouse behavior with the baseline.

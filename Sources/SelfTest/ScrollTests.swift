@@ -33,11 +33,23 @@ func scrollTests() {
               "vector \(name) should end at \(end) ms")
     }
 
-    // The engine reads Natural scrolling from CGEvent field 137, the field behind
+    // The tap reads Natural scrolling from CGEvent field 137, the field behind
     // NSEvent.isDirectionInvertedFromDevice (macos-hid.md §5.3). This fails if macOS moves it.
     let event = CGEvent(scrollWheelEvent2Source: nil, units: .line, wheelCount: 1, wheel1: 1, wheel2: 0, wheel3: 0)
     let before = event.flatMap { NSEvent(cgEvent: $0) }?.isDirectionInvertedFromDevice
-    event?.setIntegerValueField(CGEventField(rawValue: 137)!, value: 1)
+    event?.setIntegerValueField(directionInverted, value: 1)
     let after = event.flatMap { NSEvent(cgEvent: $0) }?.isDirectionInvertedFromDevice
     check(before == false && after == true, "field 137 no longer sets isDirectionInvertedFromDevice")
+
+    // Reversing negates every delta field AppKit reads and clears the mark.
+    if let event {
+        check(isInvertedFromDevice(event), "isInvertedFromDevice misses field 137")
+        reverseDirection(event)
+        let ns = NSEvent(cgEvent: event)
+        check(!isInvertedFromDevice(event) && ns?.isDirectionInvertedFromDevice == false, "reverseDirection keeps the inverted mark")
+        check(event.getIntegerValueField(.scrollWheelEventDeltaAxis1) == -1 && (ns?.scrollingDeltaY ?? 0) < 0,
+              "reverseDirection: delta \(event.getIntegerValueField(.scrollWheelEventDeltaAxis1)), AppKit \(ns?.scrollingDeltaY ?? 0)")
+        // A posted event has no sender, so the tap leaves it alone and never sees its own output.
+        check(!isDeviceNotch(event), "a posted event counts as a device notch")
+    }
 }

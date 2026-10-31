@@ -15,8 +15,9 @@ MIN=14.0
 SWIFTC=(xcrun swiftc -O -swift-version 6 -disable-sandbox -sdk "$SDK" -module-cache-path build/ModuleCache)
 mkdir -p build
 
-# The pure math (no AppKit, no event taps) against the reference vectors in docs/research.
-TESTED=(Sources/WinMouse/WindowsPointer.swift Sources/WinMouse/ScrollAnimation.swift)
+# The pure math and event mapping (no AppKit, no event taps) against docs/research.
+TESTED=(Sources/WinMouse/WindowsPointer.swift Sources/WinMouse/ScrollAnimation.swift
+        Sources/WinMouse/WheelEvents.swift Sources/WinMouse/Buttons.swift)
 "${SWIFTC[@]}" -target "arm64-apple-macos$MIN" "${TESTED[@]}" Sources/SelfTest/*.swift -o build/selftest
 build/selftest
 [[ "${1:-}" == "selftest" ]] && exit 0
