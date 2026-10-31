@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WinMouse: Mac'te Windows imleci ve tekerleği</title>
+  <meta name="description" content="Harici fareye Windows imleç eğrisini, hız ayarını ve tekerlek kaydırmasını, Control + tekerlek yakınlaştırmayı ve geri, ileri giden yan tuşları getiren ücretsiz macOS menü çubuğu uygulaması.">
+  <link rel="canonical" href="https://anilmetin0.github.io/winmouse/tr/">
+  <link rel="alternate" hreflang="en" href="https://anilmetin0.github.io/winmouse/">
+  <link rel="alternate" hreflang="tr" href="https://anilmetin0.github.io/winmouse/tr/">
+  <link rel="alternate" hreflang="x-default" href="https://anilmetin0.github.io/winmouse/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="WinMouse">
+  <meta property="og:title" content="WinMouse: Mac'te Windows imleci ve tekerleği">
+  <meta property="og:description" content="macOS'ta harici fare için Windows imleç eğrisi, tekerlek kaydırması, Control + tekerlek yakınlaştırma ve yan tuşlar.">
+  <meta property="og:url" content="https://anilmetin0.github.io/winmouse/tr/">
+  <meta property="og:image" content="https://anilmetin0.github.io/winmouse/og/og-tr.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Üzerine Windows imleç ivme eğrisi basılmış yeşil bir fare altlığında WinMouse.">
+  <meta property="og:locale" content="tr_TR">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="WinMouse: Mac'te Windows imleci ve tekerleği">
+  <meta name="twitter:description" content="macOS'ta harici fare için Windows imleç eğrisi, tekerlek kaydırması, Control + tekerlek yakınlaştırma ve yan tuşlar.">
+  <meta name="twitter:image" content="https://anilmetin0.github.io/winmouse/og/og-tr.png">
+  <meta name="twitter:image:alt" content="WinMouse on a green desk mat with the Windows pointer acceleration curve printed on it.">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#1f5c45">
+  <link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="../images/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="../images/apple-touch-icon.png">
+  <link rel="preload" href="../fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../site.css">
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "WinMouse", "description": "Harici fareye Windows imleç eğrisini, hız ayarını ve tekerlek kaydırmasını, Control + tekerlek yakınlaştırmayı ve geri, ileri giden yan tuşları getiren ücretsiz macOS menü çubuğu uygulaması.", "url": "https://anilmetin0.github.io/winmouse/tr/", "inLanguage": "tr", "image": "https://anilmetin0.github.io/winmouse/images/icon-256.png", "operatingSystem": "macOS 14 veya üstü", "applicationCategory": "UtilitiesApplication", "softwareVersion": "0.1.0", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "license": "https://opensource.org/licenses/MIT", "downloadUrl": "https://github.com/anilmetin0/winmouse/releases/latest", "codeRepository": "https://github.com/anilmetin0/winmouse", "sameAs": ["https://github.com/anilmetin0/winmouse"], "author": {"@type": "Person", "name": "Anıl Metin", "url": "https://github.com/anilmetin0"}}</script>
+  <script>try{const t=localStorage.getItem("theme");document.documentElement.dataset.theme=t==="dark"||t==="light"?t:matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}catch{}</script>
+  <script>if("IntersectionObserver"in window&&!matchMedia("(prefers-reduced-motion: reduce)").matches){const r=document.documentElement;r.classList.add("rv");addEventListener("load",()=>{if(!r.dataset.revealReady)r.classList.remove("rv")})}</script>
+  <script src="../site.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">İçeriğe geç</a>
+
+<div class="mat masthead">
+  <div class="ruler" aria-hidden="true"></div>
+  <header class="top">
+    <div class="wrap">
+      <a class="brand" href="./" aria-label="WinMouse"><img src="../images/icon-72.png" alt="" width="36" height="36"><span class="brand-name">WinMouse</span></a>
+      <nav aria-label="Main">
+        <a href="#download">İndir</a>
+        <a href="#pointer">Nasıl çalışır</a>
+        <a href="#faq">SSS</a>
+        <a class="gh" href="https://github.com/anilmetin0/winmouse" aria-label="GitHub'da WinMouse"><span class="gh-name"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82A7.65 7.65 0 0 1 8 4.58c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg><span class="gh-text">GitHub</span></span><span class="stars" hidden><svg class="star" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 .8l2.2 4.6 5 .7-3.6 3.5.9 5-4.5-2.4-4.5 2.4.9-5L.8 6.1l5-.7Z"/></svg><span data-stars></span><span class="sr"> yıldız</span></span></a>
+        <button class="theme" type="button" aria-label="Açık veya koyu temaya geç" title="Açık veya koyu temaya geç"><svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg><svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></g></svg></button>
+        <div class="lang" role="group" aria-label="Dil"><a href="../" hreflang="en" lang="en" aria-label="English">EN</a><span aria-current="page">TR</span></div>
+      </nav>
+    </div>
+  </header>
+</div>
+
+<main id="main">
+<div class="hero mat">
+  <div class="wrap hero-body">
+    <div class="hero-copy">
+      <h1>Mac'inizde <span class="hi">Windows</span> imleci ve tekerleği</h1>
+      <p class="lede">WinMouse, harici fareye Windows'un imleç eğrisini, hız ayarını ve tekerlek kaydırmasını getiren ücretsiz bir menü çubuğu uygulaması. Control + tekerlek yakınlaştırır, yan tuşlar geri ve ileri gider. İzleme dörtgenleri macOS'taki gibi çalışmaya devam eder.</p>
+      <p class="reqs">macOS 14 veya üstü, Apple silicon ve Intel. Açık kaynak, MIT lisansı.</p>
+      <div class="actions">
+        <a class="btn" href="#download"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>Mac için indir</a>
+        <a class="btn ghost" href="https://github.com/anilmetin0/winmouse">GitHub'daki kaynak kodu</a>
+      </div>
+    </div>
+
+    <figure class="plot" aria-label="Varsayılan ayarlarda Windows imleç kazancı grafiği: yavaş harekette sayım başına yaklaşık 0,57 piksel, rapor başına 8 sayımda 1,0, 32 sayımda 2,0.">
+      <div class="pbox" aria-hidden="true">
+        <svg class="graph" viewBox="0 0 1000 500" preserveAspectRatio="none">
+          <line class="one" x1="0" y1="333.3" x2="1000" y2="333.3" vector-effect="non-scaling-stroke"/>
+          <line class="one" x1="0" y1="166.7" x2="1000" y2="166.7" vector-effect="non-scaling-stroke"/>
+          <polygon class="area" points="0,500 0.0,405.2 23.5,405.2 31.2,393.3 39.1,386.1 46.9,381.4 54.7,377.9 62.5,375.4 70.3,371.3 78.1,362.5 85.9,355.3 93.8,349.3 101.6,344.2 109.4,339.9 117.2,336.1 125.0,332.8 132.8,329.9 140.6,327.3 148.4,325.0 156.2,322.9 164.1,321.0 171.9,319.3 179.7,317.8 187.5,316.3 195.3,315.0 203.1,313.8 210.9,312.7 218.8,303.5 226.6,294.9 234.4,286.8 242.2,279.2 250.0,272.1 257.8,265.5 265.6,259.2 273.4,253.3 281.2,247.7 289.1,242.4 296.9,237.4 304.7,232.7 312.5,228.1 320.3,223.9 328.1,219.8 335.9,215.9 343.8,212.2 351.6,208.6 359.4,205.2 367.2,201.9 375.0,198.8 382.8,195.8 390.6,193.0 398.4,190.2 406.2,187.6 414.1,185.0 421.9,182.5 429.7,180.2 437.5,177.9 445.3,175.7 453.1,173.6 460.9,171.5 468.8,169.5 476.6,167.6 484.4,165.7 492.2,163.9 500.0,162.2 507.8,160.5 515.6,158.9 523.4,157.3 531.2,155.7 539.1,154.2 546.9,152.8 554.7,151.3 562.5,150.0 570.3,148.6 578.1,147.3 585.9,146.1 593.8,144.8 601.6,143.6 609.4,142.5 617.2,141.3 625.0,140.2 632.8,139.1 640.6,138.1 648.4,137.0 656.2,136.0 664.1,135.0 671.9,134.1 679.7,133.1 687.5,132.2 695.3,131.3 703.1,130.4 710.9,129.6 718.8,128.7 726.6,127.9 734.4,127.1 742.2,126.3 750.0,125.5 757.8,124.8 765.6,124.0 773.4,123.3 781.2,122.6 789.1,121.9 796.9,121.2 804.7,120.6 812.5,119.9 820.3,119.3 828.1,118.6 835.9,118.0 843.8,117.4 851.6,116.8 859.4,116.2 867.2,115.6 875.0,115.1 882.8,114.5 890.6,114.0 898.4,113.4 906.2,112.9 914.1,112.4 921.9,111.9 929.7,111.4 937.5,110.9 945.3,110.4 953.1,109.9 960.9,109.5 968.8,109.0 976.6,108.5 984.4,108.1 992.2,107.7 1000.0,107.2 1000,500"/>
+          <polyline class="line" points="0.0,405.2 23.5,405.2 31.2,393.3 39.1,386.1 46.9,381.4 54.7,377.9 62.5,375.4 70.3,371.3 78.1,362.5 85.9,355.3 93.8,349.3 101.6,344.2 109.4,339.9 117.2,336.1 125.0,332.8 132.8,329.9 140.6,327.3 148.4,325.0 156.2,322.9 164.1,321.0 171.9,319.3 179.7,317.8 187.5,316.3 195.3,315.0 203.1,313.8 210.9,312.7 218.8,303.5 226.6,294.9 234.4,286.8 242.2,279.2 250.0,272.1 257.8,265.5 265.6,259.2 273.4,253.3 281.2,247.7 289.1,242.4 296.9,237.4 304.7,232.7 312.5,228.1 320.3,223.9 328.1,219.8 335.9,215.9 343.8,212.2 351.6,208.6 359.4,205.2 367.2,201.9 375.0,198.8 382.8,195.8 390.6,193.0 398.4,190.2 406.2,187.6 414.1,185.0 421.9,182.5 429.7,180.2 437.5,177.9 445.3,175.7 453.1,173.6 460.9,171.5 468.8,169.5 476.6,167.6 484.4,165.7 492.2,163.9 500.0,162.2 507.8,160.5 515.6,158.9 523.4,157.3 531.2,155.7 539.1,154.2 546.9,152.8 554.7,151.3 562.5,150.0 570.3,148.6 578.1,147.3 585.9,146.1 593.8,144.8 601.6,143.6 609.4,142.5 617.2,141.3 625.0,140.2 632.8,139.1 640.6,138.1 648.4,137.0 656.2,136.0 664.1,135.0 671.9,134.1 679.7,133.1 687.5,132.2 695.3,131.3 703.1,130.4 710.9,129.6 718.8,128.7 726.6,127.9 734.4,127.1 742.2,126.3 750.0,125.5 757.8,124.8 765.6,124.0 773.4,123.3 781.2,122.6 789.1,121.9 796.9,121.2 804.7,120.6 812.5,119.9 820.3,119.3 828.1,118.6 835.9,118.0 843.8,117.4 851.6,116.8 859.4,116.2 867.2,115.6 875.0,115.1 882.8,114.5 890.6,114.0 898.4,113.4 906.2,112.9 914.1,112.4 921.9,111.9 929.7,111.4 937.5,110.9 945.3,110.4 953.1,109.9 960.9,109.5 968.8,109.0 976.6,108.5 984.4,108.1 992.2,107.7 1000.0,107.2" vector-effect="non-scaling-stroke"/>
+          <path class="axis" d="M0 500H1000" vector-effect="non-scaling-stroke"/>
+        </svg>
+        <span class="pt" style="left:2.35%;top:81.04%"></span>
+        <span class="tag l" style="left:2.35%;top:81.04%"><b>0,57</b>sayım başına piksel<br>yavaş harekette</span>
+        <span class="pt" style="left:12.5%;top:66.56%"></span>
+        <span class="tag below" style="left:15.5%;top:66.56%"><b>1,0</b>8 sayımda</span>
+        <span class="pt" style="left:50%;top:32.44%"></span>
+        <span class="tag" style="left:50%;top:32.44%"><b>2,0</b>32 sayımda</span>
+        <svg class="cursor" style="left:96.9%;top:21.7%" viewBox="0 0 13 21"><path d="M1 1v16.2l3.9-3.7 2.6 6.1 2.6-1.1-2.6-6h5.3Z" fill="#fff" stroke="#111" stroke-width="1.2" stroke-linejoin="round"/></svg>
+        <span class="yt" style="top:66.67%">1,0</span>
+        <span class="yt" style="top:33.33%">2,0</span>
+        <span class="xt" style="left:0;transform:none">0</span>
+        <span class="xt mx" style="left:25%">16</span>
+        <span class="xt" style="left:50%">32</span>
+        <span class="xt mx" style="left:75%">48</span>
+        <span class="xt end" style="left:100%">rapor başına 64 sayım</span>
+      </div>
+      <figcaption class="cap">Windows 10 varsayılanlarıyla imleç kazancı: imleç hızı 10, İşaretçi hassasiyetini artır açık, ekran ölçeği %100</figcaption>
+    </figure>
+  </div>
+</div>
+
+<section id="download" aria-labelledby="download-h">
+  <div class="wrap">
+    <div class="head"><h2 id="download-h">İndir</h2></div>
+    <div class="dl">
+      <div class="card" data-reveal>
+        <h3>Mac için WinMouse</h3>
+        <p class="sub">Sürüm <span data-version>0.1.0</span>. macOS 14 Sonoma veya üstü, Apple silicon ve Intel.</p>
+        <a class="btn" data-asset="dmg" href="https://github.com/anilmetin0/winmouse/releases/latest"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>Disk görüntüsünü indir</a>
+        <p class="file">Dosyanın adı <code>WinMouse-<span data-version>0.1.0</span>.dmg</code>. SHA-256 sağlama toplamı aynı sürüm sayfasında.</p>
+        <ol class="steps">
+          <li><div><b>Disk görüntüsünü açın</b><p>WinMouse'u yanındaki Uygulamalar klasörüne sürükleyin.</p></div></li>
+          <li><div><b>WinMouse'u ilk kez açın</b><p>Uygulama Apple tarafından onaylanmadığı (notarize edilmediği) için macOS açmayı reddeder. <span class="path">Sistem Ayarları → Gizlilik ve Güvenlik</span> bölümünde aşağı kaydırıp Yine de Aç'a tıklayın. macOS bunu bir kez sorar.</p></div></li>
+          <li><div><b>Erişilebilirlik izni verin</b><p>macOS sorduğunda <span class="path">Sistem Ayarları → Gizlilik ve Güvenlik → Erişilebilirlik</span> bölümünde WinMouse'u açın. Tekerlek ve yan tuşlar bu izne ihtiyaç duyar. İmleç eğrisi izinsiz de çalışır.</p></div></li>
+        </ol>
+        <p class="note">Menü çubuğunda bir fare simgesi belirir ve ayarlar penceresi açılır. Simgeden WinMouse'u duraklatıp sürdürebilirsiniz.</p>
+      </div>
+      <div class="card" data-reveal>
+        <h3>Kaynak koddan derleyin</h3>
+        <p class="sub">Xcode ya da Xcode Command Line Tools gerekir</p>
+        <div class="term"><pre id="src" tabindex="0">git clone https://github.com/anilmetin0/winmouse.git
+cd winmouse
+./build.sh
+cp -R build/WinMouse.app /Applications/
+open /Applications/WinMouse.app</pre></div>
+        <div class="copy-row">
+          <button class="btn ghost copy" type="button" data-copy="src" data-label="Komutları kopyala">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg>
+            <svg class="ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+            <span class="lbl" aria-live="polite">Komutları kopyala</span>
+          </button>
+        </div>
+        <p class="note">Yerel derleme her seferinde yeni bir imza alır, bu yüzden macOS yeniden derlemeden sonra Erişilebilirlik iznini unutabilir. WinMouse'u Erişilebilirlik listesinden kaldırıp yeniden ekleyin ya da kendi sertifikanızla imzalayın: <code>CODESIGN_IDENTITY="Sertifikanız" ./build.sh</code></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pointer" class="mat pointer" aria-labelledby="pointer-h">
+  <div class="wrap">
+    <div class="head">
+      <div>
+        <h2 id="pointer-h">Windows imleç eğrisi</h2>
+        <p class="intro">İşaretçi hassasiyetini artır açıkken Windows, hızlı bir hareketin her sayımı için imleci yavaş bir hareketinkinden daha uzağa taşır. WinMouse bu eğriyi Windows'un varsayılan eğrisinden ve imleç hızı ayarından kurar, her harici fareye ivme tablosu olarak verir. Hassasiyet kapalıyken Windows'un doğrusal hızlarını kullanır.</p>
+      </div>
+    </div>
+    <div class="grid">
+      <div data-reveal>
+        <div class="win" role="group" aria-label="WinMouse ayarları, imleç bölümü">
+          <div class="win-bar"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>WinMouse Ayarları</div>
+          <div class="win-body">
+            <h4>İmleç</h4>
+            <div class="group">
+              <div class="row"><span>Windows imleç hareketi</span><input class="switch" type="checkbox" checked disabled aria-label="Windows imleç hareketi"></div>
+              <div class="row slider">
+                <label for="speed">İmleç hızı</label>
+                <span class="range">Yavaş<input id="speed" type="range" min="1" max="20" step="1" value="10">Hızlı</span>
+                <output for="speed" id="speed-out">10</output>
+              </div>
+              <label class="row" for="epp"><span>İşaretçi hassasiyetini artır</span><input class="switch" id="epp" type="checkbox" checked></label>
+            </div>
+          </div>
+        </div>
+        <p class="legend" style="margin-top:16px">Hız ayarını değiştirin ya da hassasiyeti kapatın, eğri de değişir.</p>
+      </div>
+      <figure class="chart" data-reveal style="margin:0">
+        <svg viewBox="0 0 640 400" role="img" aria-labelledby="chart-t">
+          <title id="chart-t">Seçilen ayarlar ve Windows varsayılanı için rapor başına sayıma göre sayım başına imleç pikseli</title>
+          <g class="gridl">
+            <line x1="56" y1="292" x2="620" y2="292"/><line x1="56" y1="224" x2="620" y2="224"/><line x1="56" y1="156" x2="620" y2="156"/><line x1="56" y1="88" x2="620" y2="88"/><line x1="56" y1="20" x2="620" y2="20"/>
+            <line x1="197" y1="20" x2="197" y2="360"/><line x1="338" y1="20" x2="338" y2="360"/><line x1="479" y1="20" x2="479" y2="360"/><line x1="620" y1="20" x2="620" y2="360"/>
+          </g>
+          <path class="ax" d="M56 20V360H620"/>
+          <g class="lab">
+            <text x="46" y="364" text-anchor="end">0</text><text x="46" y="296" text-anchor="end">1</text><text x="46" y="228" text-anchor="end">2</text><text x="46" y="160" text-anchor="end">3</text><text x="46" y="92" text-anchor="end">4</text><text x="46" y="24" text-anchor="end">5</text>
+            <text x="197" y="382" text-anchor="middle">16</text><text x="338" y="382" text-anchor="middle">32</text><text x="479" y="382" text-anchor="middle">48</text><text x="620" y="382" text-anchor="end">64</text>
+            <text x="338" y="400" text-anchor="middle">rapor başına sayım</text>
+            <text x="-190" y="14" transform="rotate(-90)" text-anchor="middle">sayım başına piksel</text>
+          </g>
+          <polyline class="ref" points="56.0,321.3 69.3,321.3 73.6,316.5 78.0,313.5 82.4,311.6 86.8,310.2 91.2,309.1 95.7,307.5 100.1,303.9 104.5,301.0 108.9,298.5 113.3,296.4 117.7,294.7 122.1,293.1 126.5,291.8 130.9,290.6 135.3,289.5 139.7,288.6 144.1,287.8 148.5,287.0 152.9,286.3 157.3,285.6 161.8,285.1 166.2,284.5 170.6,284.0 175.0,283.6 179.4,279.8 183.8,276.3 188.2,273.0 192.6,269.9 197.0,267.0 201.4,264.3 205.8,261.7 210.2,259.3 214.6,257.1 219.0,254.9 223.4,252.9 227.8,250.9 232.2,249.1 236.7,247.3 241.1,245.7 245.5,244.1 249.9,242.6 254.3,241.1 258.7,239.7 263.1,238.4 267.5,237.1 271.9,235.9 276.3,234.7 280.7,233.6 285.1,232.5 289.5,231.5 293.9,230.5 298.3,229.5 302.8,228.6 307.2,227.7 311.6,226.8 316.0,226.0 320.4,225.2 324.8,224.4 329.2,223.6 333.6,222.9 338.0,222.2 342.4,221.5 346.8,220.8 351.2,220.2 355.6,219.5 360.0,218.9 364.4,218.3 368.8,217.7 373.2,217.2 377.7,216.6 382.1,216.1 386.5,215.6 390.9,215.1 395.3,214.6 399.7,214.1 404.1,213.7 408.5,213.2 412.9,212.8 417.3,212.3 421.7,211.9 426.1,211.5 430.5,211.1 434.9,210.7 439.3,210.3 443.8,209.9 448.2,209.6 452.6,209.2 457.0,208.9 461.4,208.5 465.8,208.2 470.2,207.9 474.6,207.5 479.0,207.2 483.4,206.9 487.8,206.6 492.2,206.3 496.6,206.0 501.0,205.7 505.4,205.5 509.8,205.2 514.2,204.9 518.7,204.7 523.1,204.4 527.5,204.1 531.9,203.9 536.3,203.7 540.7,203.4 545.1,203.2 549.5,202.9 553.9,202.7 558.3,202.5 562.7,202.3 567.1,202.1 571.5,201.9 575.9,201.6 580.3,201.4 584.8,201.2 589.2,201.0 593.6,200.8 598.0,200.7 602.4,200.5 606.8,200.3 611.2,200.1 615.6,199.9 620.0,199.7"/>
+          <path class="live-area" d="M56 360L56.0 321.3L69.3 321.3L73.6 316.5L78.0 313.5L82.4 311.6L86.8 310.2L91.2 309.1L95.7 307.5L100.1 303.9L104.5 301.0L108.9 298.5L113.3 296.4L117.7 294.7L122.1 293.1L126.5 291.8L130.9 290.6L135.3 289.5L139.7 288.6L144.1 287.8L148.5 287.0L152.9 286.3L157.3 285.6L161.8 285.1L166.2 284.5L170.6 284.0L175.0 283.6L179.4 279.8L183.8 276.3L188.2 273.0L192.6 269.9L197.0 267.0L201.4 264.3L205.8 261.7L210.2 259.3L214.6 257.1L219.0 254.9L223.4 252.9L227.8 250.9L232.2 249.1L236.7 247.3L241.1 245.7L245.5 244.1L249.9 242.6L254.3 241.1L258.7 239.7L263.1 238.4L267.5 237.1L271.9 235.9L276.3 234.7L280.7 233.6L285.1 232.5L289.5 231.5L293.9 230.5L298.3 229.5L302.8 228.6L307.2 227.7L311.6 226.8L316.0 226.0L320.4 225.2L324.8 224.4L329.2 223.6L333.6 222.9L338.0 222.2L342.4 221.5L346.8 220.8L351.2 220.2L355.6 219.5L360.0 218.9L364.4 218.3L368.8 217.7L373.2 217.2L377.7 216.6L382.1 216.1L386.5 215.6L390.9 215.1L395.3 214.6L399.7 214.1L404.1 213.7L408.5 213.2L412.9 212.8L417.3 212.3L421.7 211.9L426.1 211.5L430.5 211.1L434.9 210.7L439.3 210.3L443.8 209.9L448.2 209.6L452.6 209.2L457.0 208.9L461.4 208.5L465.8 208.2L470.2 207.9L474.6 207.5L479.0 207.2L483.4 206.9L487.8 206.6L492.2 206.3L496.6 206.0L501.0 205.7L505.4 205.5L509.8 205.2L514.2 204.9L518.7 204.7L523.1 204.4L527.5 204.1L531.9 203.9L536.3 203.7L540.7 203.4L545.1 203.2L549.5 202.9L553.9 202.7L558.3 202.5L562.7 202.3L567.1 202.1L571.5 201.9L575.9 201.6L580.3 201.4L584.8 201.2L589.2 201.0L593.6 200.8L598.0 200.7L602.4 200.5L606.8 200.3L611.2 200.1L615.6 199.9L620.0 199.7L620 360Z"/>
+          <path class="live" d="M56.0 321.3L69.3 321.3L73.6 316.5L78.0 313.5L82.4 311.6L86.8 310.2L91.2 309.1L95.7 307.5L100.1 303.9L104.5 301.0L108.9 298.5L113.3 296.4L117.7 294.7L122.1 293.1L126.5 291.8L130.9 290.6L135.3 289.5L139.7 288.6L144.1 287.8L148.5 287.0L152.9 286.3L157.3 285.6L161.8 285.1L166.2 284.5L170.6 284.0L175.0 283.6L179.4 279.8L183.8 276.3L188.2 273.0L192.6 269.9L197.0 267.0L201.4 264.3L205.8 261.7L210.2 259.3L214.6 257.1L219.0 254.9L223.4 252.9L227.8 250.9L232.2 249.1L236.7 247.3L241.1 245.7L245.5 244.1L249.9 242.6L254.3 241.1L258.7 239.7L263.1 238.4L267.5 237.1L271.9 235.9L276.3 234.7L280.7 233.6L285.1 232.5L289.5 231.5L293.9 230.5L298.3 229.5L302.8 228.6L307.2 227.7L311.6 226.8L316.0 226.0L320.4 225.2L324.8 224.4L329.2 223.6L333.6 222.9L338.0 222.2L342.4 221.5L346.8 220.8L351.2 220.2L355.6 219.5L360.0 218.9L364.4 218.3L368.8 217.7L373.2 217.2L377.7 216.6L382.1 216.1L386.5 215.6L390.9 215.1L395.3 214.6L399.7 214.1L404.1 213.7L408.5 213.2L412.9 212.8L417.3 212.3L421.7 211.9L426.1 211.5L430.5 211.1L434.9 210.7L439.3 210.3L443.8 209.9L448.2 209.6L452.6 209.2L457.0 208.9L461.4 208.5L465.8 208.2L470.2 207.9L474.6 207.5L479.0 207.2L483.4 206.9L487.8 206.6L492.2 206.3L496.6 206.0L501.0 205.7L505.4 205.5L509.8 205.2L514.2 204.9L518.7 204.7L523.1 204.4L527.5 204.1L531.9 203.9L536.3 203.7L540.7 203.4L545.1 203.2L549.5 202.9L553.9 202.7L558.3 202.5L562.7 202.3L567.1 202.1L571.5 201.9L575.9 201.6L580.3 201.4L584.8 201.2L589.2 201.0L593.6 200.8L598.0 200.7L602.4 200.5L606.8 200.3L611.2 200.1L615.6 199.9L620.0 199.7"/>
+        </svg>
+        <div class="legend"><span><i></i>Sizin ayarınız</span><span><i class="ref"></i>Windows varsayılanı: hız 10, hassasiyet açık</span></div>
+        <p class="readout" aria-live="polite" id="readout">Hız 10, hassasiyet açık: 8 sayımlık bir rapor imleci <b>8 piksel</b>, 32 sayımlık bir rapor <b>65 piksel</b> taşır.</p>
+      </figure>
+    </div>
+    <ul class="facts">
+      <li data-reveal><h3>İzin gerekmez</h3><p>Eğri farenin kendi HID hizmetine yazılır. Erişilebilirlik izni yalnızca tekerlek ve tuşlar için.</p></li>
+      <li data-reveal><h3>Durunca geri alınır</h3><p>WinMouse her farenin önceki değerlerini saklar; duraklatınca, çıkınca, kullanıcı değişince ve bir çökmeden sonra onları geri yazar.</p></li>
+      <li data-reveal><h3>Yalnızca harici fareler</h3><p>Dahili izleme dörtgeni ve Magic Trackpad macOS imlecini kullanmaya devam eder.</p></li>
+    </ul>
+  </div>
+</section>
+
+<section id="wheel" class="wheel" aria-labelledby="wheel-h">
+  <div class="wrap">
+    <div class="head">
+      <div>
+        <h2 id="wheel-h">Chrome ve Edge gibi tekerlek kaydırma</h2>
+        <p class="intro">Windows'ta Chrome ve Edge tekerleğin her çentiğinde 100 piksel kaydırır ve her çentiği 200 ms boyunca canlandırır. WinMouse aynı mesafeyi aynı eğriyle kaydırır. Hıza bağlı ivme ya da kaydırma ataleti eklemez.</p>
+      </div>
+    </div>
+    <div class="grid">
+      <div data-reveal>
+        <div class="track" aria-hidden="true">
+          <div class="scale"></div>
+          <div class="doc"></div>
+          <div class="view"><span>1 çentik</span></div>
+        </div>
+        <div class="notch">
+          <button class="btn" type="button" data-notch="1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg>Bir çentik aşağı</button>
+          <button class="btn ghost" type="button" data-notch="-1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg>Bir çentik yukarı</button>
+        </div>
+        <p class="note" aria-live="polite" id="notch-out">Her basış sayfayı 3 satır, 100 punto kaydırır.</p>
+      </div>
+      <div data-reveal>
+        <div class="ease">
+          <svg viewBox="0 0 520 300" role="img" aria-labelledby="ease-t">
+            <title id="ease-t">Bir çentikte zamana göre kaydırma mesafesi: 200 milisaniyede 0'dan 100 puntoya yavaş başlayıp yavaş biten bir eğri</title>
+            <g class="g"><line x1="50" y1="140" x2="500" y2="140"/><line x1="162.5" y1="30" x2="162.5" y2="250"/><line x1="275" y1="30" x2="275" y2="250"/><line x1="387.5" y1="30" x2="387.5" y2="250"/><line x1="50" y1="30" x2="500" y2="30"/><line x1="500" y1="30" x2="500" y2="250"/></g>
+            <path class="ax" d="M50 30V250H500"/>
+            <path class="c" d="M50 250C239 250 311 30 500 30"/>
+            <circle class="dot" r="7" cx="50" cy="250" id="ease-dot"/>
+            <g class="lab">
+              <text x="40" y="254" text-anchor="end">0</text><text x="40" y="144" text-anchor="end">50</text><text x="40" y="34" text-anchor="end">100 pt</text>
+              <text x="50" y="272" text-anchor="middle">0</text><text x="275" y="272" text-anchor="middle">100</text><text x="500" y="272" text-anchor="end">200 ms</text>
+            </g>
+          </svg>
+        </div>
+        <dl class="spec">
+          <dt>3 satır</dt><dd>her çentikte, 100 punto, Chrome ve Edge'deki gibi</dd>
+          <dt>200 ms</dt><dd>her çentik için, <code>cubic-bezier(0.42, 0, 0.58, 1)</code> eğrisiyle</dd>
+          <dt>Shift</dt><dd>ile tekerlek yana kaydırır</dd>
+        </dl>
+        <p class="note">İzleme dörtgeni doğal kaydırma kullansa da tekerlek Windows yönünde kaydırır. İsterseniz izleme dörtgeniyle aynı yöne alabilirsiniz. Hareketi azalt açıkken yumuşak kaydırma kapanır.</p>
+      </div>
+    </div>
+    <div class="zoom" data-reveal>
+      <h3>Control + tekerlek yakınlaştırır</h3>
+      <p>Tekerleği her ileri çentikte <kbd>⌘ =</kbd>, her geri çentikte <kbd>⌘ −</kbd> basılır. Böylece yakınlaştırma Safari'de ve Mac'te Control + tekerleği yok sayan Chrome'da da çalışır. macOS Büyütme ekranı Control ve tekerlekle büyütecek şekilde ayarlıysa WinMouse buna karışmaz.</p>
+    </div>
+  </div>
+</section>
+
+<section id="buttons" aria-labelledby="buttons-h">
+  <div class="wrap">
+    <div class="head">
+      <div>
+        <h2 id="buttons-h">Yan tuşlar geri ve ileri gider</h2>
+        <p class="intro">Windows'ta yan tuşlar her pencerede, tuşu bıraktığınızda geri ve ileri gider. WinMouse da bırakınca çalışır ve uygulamaya göre üç farklı şey yapar.</p>
+      </div>
+    </div>
+    <div class="apps" data-reveal>
+      <div>
+        <h3>Tuşlar olduğu gibi gider</h3>
+        <p>Bu uygulamalar Mac'te yan tuşları zaten tanır, tuşlar onlara dokunulmadan ulaşır.</p>
+        <ul><li>Chrome</li><li>Edge</li><li>Firefox</li><li>VS Code</li><li>JetBrains IDE'leri</li></ul>
+      </div>
+      <div>
+        <h3>Geri ve İleri kısayolları</h3>
+        <p>Bu uygulamalar tuşları yok sayar, WinMouse onların yerine ⌘[ ve ⌘] basar. Xcode'a Control-Command-ok tuşu gider.</p>
+        <ul><li>Finder</li><li>Safari</li><li>Sistem Ayarları</li><li>App Store</li><li>Müzik</li><li>TV</li><li>Önizleme</li><li>Xcode</li></ul>
+      </div>
+      <div>
+        <h3>Dokunulmaz</h3>
+        <p>Diğer uygulamalar tuşları olduğu gibi alır, çünkü birçoğunda ⌘[ girintiyi azaltır. Oyunlar kendi tuşlarını korur.</p>
+      </div>
+    </div>
+    <p class="more note">Orta tuş, sağ tık ve çift tık macOS tarayıcılarında zaten Windows'taki gibi çalışır; WinMouse bunları değiştirmez.</p>
+  </div>
+</section>
+
+<section id="settings" aria-labelledby="settings-h">
+  <div class="wrap">
+    <div class="head">
+      <div>
+        <h2 id="settings-h">Windows adlarıyla ayarlar</h2>
+        <p class="intro">Ayarlar penceresi Windows'taki adları ve varsayılanları kullanır. Pencere sistem diline göre Türkçe ya da İngilizce açılır.</p>
+      </div>
+    </div>
+    <table class="table" data-reveal>
+      <thead><tr><th scope="col">Ayar</th><th scope="col">Windows'taki adı (İngilizce)</th><th scope="col">Varsayılan</th></tr></thead>
+      <tbody>
+        <tr><td>İmleç hızı</td><td>Mouse pointer speed</td><td>20 üzerinden 10</td></tr>
+        <tr><td>İşaretçi hassasiyetini artır</td><td>Enhance pointer precision</td><td>Açık</td></tr>
+        <tr><td>Bir seferde kaydırılacak satır</td><td>Lines to scroll at a time</td><td>3</td></tr>
+        <tr><td>Yatay kaydırılacak karakter</td><td>Horizontal scrolling</td><td>3</td></tr>
+        <tr><td>Yumuşak kaydırma</td><td>Smooth scrolling in Chrome and Edge</td><td>Açık</td></tr>
+        <tr><td>Kaydırma yönü</td><td>Down motion scrolls down</td><td>Windows</td></tr>
+        <tr><td>Control + tekerlek yakınlaştırır</td><td>Ctrl + wheel zoom</td><td>Açık</td></tr>
+        <tr><td>Yan tuşlar geri ve ileri gider</td><td>Back and forward buttons</td><td>Açık</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="scope" aria-labelledby="scope-h">
+  <div class="wrap">
+    <h2 id="scope-h" class="sr">Kapsam ve sınırlar</h2>
+    <div class="two">
+      <div data-reveal>
+        <h3>Neye dokunmaz</h3>
+        <ul class="plain">
+          <li><b>İzleme dörtgenleri.</b> Dahili izleme dörtgeni, Magic Trackpad ve Magic Mouse'un dokunmatik kaydırması macOS'taki gibi çalışır.</li>
+          <li><b>Oyunlar ve hareketler.</b> Kendini oyun olarak tanıtan uygulamalar ve Command ya da Option ile yapılan tekerlek hareketleri değişmez.</li>
+          <li><b>Sistem tercihleri.</b> WinMouse genel tercihlere bir şey yazmaz. Her harici farenin HID özelliklerini değiştirir ve özgün değerlerini saklar. Fareyi çıkarıp takmak ya da Mac'i yeniden başlatmak da bu değişiklikleri siler.</li>
+          <li><b>Verileriniz.</b> Telemetri yok.</li>
+        </ul>
+      </div>
+      <div data-reveal>
+        <h3>Windows'tan farkları</h3>
+        <ul class="plain">
+          <li>macOS bir hareketi düz çizgi uzunluğuyla ölçer. Windows uzun ekseni ve kısa eksenin yarısını toplar. Bu yüzden çapraz bir hareket Mac'te %12'ye kadar daha yavaş sayılır ve biraz daha az ivme alır.</li>
+          <li>Fare hızlanıp eğrinin daha dik bir bölümüne geçtiğinde Windows tek bir rapor için eski ve yeni bölümün ortalamasını alır. macOS tablosu bunu yapamaz.</li>
+          <li>Yan tuşlar yalnızca yukarıda sayılan uygulamalarda çalışır.</li>
+          <li>Kısayollar tuş konumu olarak gönderilir. <code>[</code> ya da <code>=</code> işaretinin başka bir tuşta olduğu klavye düzenlerinde, kısayolları karaktere göre eşleyen bir uygulama tepki vermeyebilir.</li>
+        </ul>
+        <p class="more"><a href="https://github.com/anilmetin0/winmouse/tree/main/docs/research">Her sayının dayandığı araştırmayı okuyun</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq" aria-labelledby="faq-h">
+  <div class="wrap">
+    <div class="head"><h2 id="faq-h">Sorular</h2></div>
+    <div class="faq" data-reveal>
+      <details>
+        <summary>macOS, WinMouse açılamıyor diyor<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></summary>
+        <div class="ans">
+          <p>WinMouse'un Developer ID imzası yok ve Apple tarafından notarize edilmedi, bu yüzden macOS ilk açılışı engeller. Uygulamayı bir kez açın ve macOS'un reddetmesine izin verin. Sonra Sistem Ayarları → Gizlilik ve Güvenlik'te WinMouse ile ilgili iletiye inip Yine de Aç'a tıklayın.</p>
+          <p>Bundan sonra WinMouse diğer uygulamalar gibi açılır.</p>
+        </div>
+      </details>
+      <details>
+        <summary>Neden Erişilebilirlik izni istiyor?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></summary>
+        <div class="ans">
+          <p>Tekerlek kaydırmasını ve yan tuşları değiştirmek için WinMouse'un giriş olaylarını okuyup göndermesi gerekir. macOS buna yalnızca Erişilebilirlik izniyle olanak tanır. İmleç eğrisi için izin gerekmez.</p>
+        </div>
+      </details>
+      <details>
+        <summary>Güncellemeden sonra tekerlek çalışmıyor<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></summary>
+        <div class="ans">
+          <p>macOS Erişilebilirlik iznini uygulamanın imzasına bağlar ve yeni bir derlemenin imzası farklı olabilir. WinMouse'u Sistem Ayarları → Gizlilik ve Güvenlik → Erişilebilirlik listesinden kaldırıp yeniden ekleyin.</p>
+        </div>
+      </details>
+      <details>
+        <summary>İmleç tuhaf davranıyor<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></summary>
+        <div class="ans">
+          <p>WinMouse Apple'ın özel HID arayüzlerini kullanır ve bir macOS güncellemesi bunları değiştirebilir. WinMouse'tan çıkıp fareyi yeniden bağlayın ya da Mac'i yeniden başlatın. İkisi de WinMouse'un ayarladığı eğriyi siler.</p>
+          <p>Aynı ayarları değiştiren başka bir fare aracı da WinMouse'un değişikliklerini bozabilir. Ayarlar penceresi böyle bir uygulama bulursa adını gösterir.</p>
+        </div>
+      </details>
+      <details>
+        <summary>İndirdiğim dosyayı nasıl doğrularım?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></summary>
+        <div class="ans">
+          <p>Aynı sürümdeki <code>.sha256</code> dosyasını aynı klasöre indirin, sonra o klasörde Terminal'de şunu çalıştırın:</p>
+          <p><code>shasum -a 256 -c WinMouse-<span data-version>0.1.0</span>.dmg.sha256</code></p>
+        </div>
+      </details>
+      <details>
+        <summary>WinMouse'u nasıl kaldırırım?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></summary>
+        <div class="ans">
+          <p>Menüsünden WinMouse'tan çıkın, Uygulamalar klasöründen silin ve Sistem Ayarları'ndaki Erişilebilirlik listesinden kaldırın. WinMouse kapanınca fare önceki ayarlarına döner.</p>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="mat">
+  <div class="ruler" aria-hidden="true"></div>
+  <div class="wrap">
+    <p>WinMouse, MIT lisanslı özgür yazılımdır</p>
+    <nav aria-label="Proje">
+      <a href="https://github.com/anilmetin0/winmouse/releases">Tüm sürümler</a>
+      <a href="https://github.com/anilmetin0/winmouse/blob/main/CHANGELOG.md">Değişiklik günlüğü</a>
+      <a href="https://github.com/anilmetin0/winmouse/tree/main/docs/research">Araştırma</a>
+      <a href="https://github.com/anilmetin0/winmouse/issues">Sorun bildir</a>
+      <a href="https://github.com/anilmetin0/winmouse">Kaynak kodu</a>
+      <a href="../" hreflang="en" lang="en">English</a>
+    </nav>
+  </div>
+</footer>
+</body>
+</html>

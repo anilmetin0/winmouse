@@ -1,0 +1,64 @@
+<!doctype html>
+<!-- Social previews (og/og-en.png, og/og-tr.png). Render at exactly 1200x630: og.html for English, og.html?tr for Turkish. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face { font-family: "Archivo"; src: url("../fonts/archivo-latin.woff2") format("woff2"); font-weight: 100 900; font-stretch: 62% 125%; }
+  @font-face { font-family: "Archivo"; src: url("../fonts/archivo-latin-ext.woff2") format("woff2"); font-weight: 100 900; font-stretch: 62% 125%; unicode-range: U+0100-02BA; }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 1200px; height: 630px; overflow: hidden; }
+  body {
+    position: relative; color: #f3f7ea; font-family: "Archivo", sans-serif;
+    background-color: #1f5c45;
+    background-image:
+      linear-gradient(rgb(233 242 216 / .2) 1px, transparent 1px), linear-gradient(90deg, rgb(233 242 216 / .2) 1px, transparent 1px),
+      linear-gradient(rgb(233 242 216 / .09) 1px, transparent 1px), linear-gradient(90deg, rgb(233 242 216 / .09) 1px, transparent 1px);
+    background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px; background-position: -1px -1px;
+  }
+  .ruler { position: absolute; left: 0; right: 0; top: 0; height: 30px; box-shadow: inset 0 -1px rgb(233 242 216 / .35);
+    background-image: linear-gradient(90deg, rgb(233 242 216 / .7) 1px, transparent 1px), linear-gradient(90deg, rgb(233 242 216 / .45) 1px, transparent 1px), linear-gradient(90deg, rgb(233 242 216 / .3) 1px, transparent 1px);
+    background-size: 100px 30px, 50px 16px, 10px 8px; background-repeat: repeat-x; background-position: -1px 0; }
+  .text { position: absolute; left: 72px; top: 96px; width: 600px; }
+  .brand { display: flex; align-items: center; gap: 18px; font-size: 32px; font-weight: 800; font-stretch: 116%; }
+  .brand img { width: 60px; height: 60px; }
+  h1 { margin-top: 40px; font-size: 70px; line-height: 1; font-weight: 800; font-stretch: 116%; letter-spacing: -.03em; }
+  h1 span { color: #f2cf4a; }
+  p { margin-top: 28px; font-size: 26px; line-height: 1.4; color: #c3d7c6; max-width: 520px; }
+  svg.c { position: absolute; left: 700px; top: 150px; width: 440px; height: 380px; overflow: visible; }
+  .lab { position: absolute; font-size: 18px; color: #f3f7ea; text-align: center; transform: translate(-50%, -100%); }
+  .lab b { display: block; font-size: 30px; font-weight: 800; font-stretch: 116%; color: #f2cf4a; }
+</style>
+</head>
+<body>
+  <div class="ruler"></div>
+  <div class="text">
+    <div class="brand"><img src="../brand/icon-1024.png" alt="">WinMouse</div>
+    <h1 data-en="The <span>Windows</span> pointer and wheel, on your Mac" data-tr="Mac'inizde <span>Windows</span> imleci ve tekerleği"></h1>
+    <p data-en="Free, open-source menu-bar app for an external mouse on macOS" data-tr="macOS'ta harici fare için ücretsiz, açık kaynak menü çubuğu uygulaması"></p>
+  </div>
+  <svg class="c" viewBox="0 0 440 380">
+    <path d="M0 380H440" stroke="rgb(233 242 216 / .55)" stroke-width="2"/>
+    <polyline id="curve" fill="none" stroke="#f2cf4a" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle id="dot" r="9" fill="#1f5c45" stroke="#f2cf4a" stroke-width="5"/>
+  </svg>
+  <div class="lab" id="lab"><b></b><span></span></div>
+<script>
+  const tr = location.search.includes("tr");
+  document.documentElement.lang = tr ? "tr" : "en";
+  for (const el of document.querySelectorAll("[data-en]")) el.innerHTML = el.dataset[tr ? "tr" : "en"];
+  // Windows 10 default curve, speed 10 (docs/research/windows-pointer.md)
+  const X = [0, 0.430008, 1.25, 3.860001, 40], Y = [0, 1.070267, 4.140625, 18.984375, 443.75];
+  const y = (x) => { for (let i = 1; i < X.length; i++) if (x <= X[i] || i === X.length - 1) return Y[i-1] + (Y[i]-Y[i-1]) * (x - X[i-1]) / (X[i] - X[i-1]); };
+  const g = (m) => 0.8 * y(m / 3.5) / m;
+  const px = (m) => m / 64 * 440, py = (v) => 380 - v / 2.6 * 380;
+  const pts = [[0, g(1e-6)]]; for (let m = 1.5; m <= 64; m += 0.5) pts.push([m, g(m)]);
+  document.getElementById("curve").setAttribute("points", pts.map(([m, v]) => px(m) + "," + py(v)).join(" "));
+  const d = document.getElementById("dot"); d.setAttribute("cx", px(32)); d.setAttribute("cy", py(g(32)));
+  const lab = document.getElementById("lab");
+  lab.style.left = 700 + px(32) + "px"; lab.style.top = 150 + py(g(32)) - 22 + "px";
+  lab.querySelector("b").textContent = tr ? "2,0" : "2.0";
+  lab.querySelector("span").textContent = tr ? "32 sayımda piksel/sayım" : "pixels per count at 32 counts";
+</script>
+</body>
+</html>
