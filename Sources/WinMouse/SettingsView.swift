@@ -6,16 +6,18 @@ struct SettingsView: View {
     @ObservedObject var state: AppState
     let openAccessibilitySettings: () -> Void
 
-    // Keys and defaults match Settings.swift, which registers the same defaults at launch.
-    @AppStorage("enabled") private var enabled = true
-    @AppStorage("pointerEnabled") private var pointerEnabled = true
-    @AppStorage("pointerSpeed") private var pointerSpeed = 10
-    @AppStorage("enhancePointerPrecision") private var enhancePointerPrecision = true
-    @AppStorage("scrollEnabled") private var scrollEnabled = true
-    @AppStorage("scrollLines") private var scrollLines = 3
-    @AppStorage("scrollChars") private var scrollChars = 3
-    @AppStorage("smoothScrolling") private var smoothScrolling = true
-    @AppStorage("naturalDirection") private var naturalDirection = false
+    // Defaults match Settings.swift, which registers the same defaults at launch.
+    @AppStorage(Settings.Key.enabled) private var enabled = true
+    @AppStorage(Settings.Key.pointerEnabled) private var pointerEnabled = true
+    @AppStorage(Settings.Key.pointerSpeed) private var pointerSpeed = 10
+    @AppStorage(Settings.Key.enhancePointerPrecision) private var enhancePointerPrecision = true
+    @AppStorage(Settings.Key.scrollEnabled) private var scrollEnabled = true
+    @AppStorage(Settings.Key.scrollLines) private var scrollLines = 3
+    @AppStorage(Settings.Key.scrollChars) private var scrollChars = 3
+    @AppStorage(Settings.Key.smoothScrolling) private var smoothScrolling = true
+    @AppStorage(Settings.Key.naturalDirection) private var naturalDirection = false
+    @AppStorage(Settings.Key.sideButtons) private var sideButtons = true
+    @AppStorage(Settings.Key.controlZoom) private var controlZoom = true
     @State private var openAtLogin = SMAppService.mainApp.status == .enabled
 
     var body: some View {
@@ -57,15 +59,18 @@ struct SettingsView: View {
                 }
             }
 
-            Section("Wheel") {
-                if enabled && scrollEnabled && state.needsAccessibility {
+            if enabled && state.needsAccessibility {
+                Section {
                     LabeledContent {
                         Button("Open System Settings…", action: openAccessibilitySettings)
                     } label: {
-                        Label("Scrolling needs Accessibility access.", systemImage: "exclamationmark.triangle.fill")
+                        Label("The wheel and the side buttons need Accessibility access.", systemImage: "exclamationmark.triangle.fill")
                             .symbolRenderingMode(.multicolor)
                     }
                 }
+            }
+
+            Section("Wheel") {
                 Toggle("Windows scrolling", isOn: $scrollEnabled)
                 Group {
                     LabeledContent("Lines to scroll at a time") {
@@ -81,8 +86,17 @@ struct SettingsView: View {
                         Text("Down motion scrolls down").tag(false)
                         Text("Same as trackpad").tag(true)
                     }
+                    Toggle("Control + wheel zooms", isOn: $controlZoom)
                 }
                 .disabled(!scrollEnabled)
+            }
+
+            Section {
+                Toggle("Side buttons go back and forward", isOn: $sideButtons)
+            } header: {
+                Text("Buttons")
+            } footer: {
+                Text("Finder, Safari and other Apple apps go back and forward too. Games keep their own buttons.").foregroundStyle(.secondary)
             }
 
             Section {

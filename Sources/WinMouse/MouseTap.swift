@@ -2,15 +2,16 @@ import AppKit
 import OSLog
 import QuartzCore
 
-/// Chrome/Edge-on-Windows scrolling for an external mouse wheel (docs/research/windows-scroll.md
-/// §8): each notch moves a fixed distance with a short ease-in-out, with no acceleration and no
-/// momentum. Trackpads, Magic Mouse and mice whose driver already scrolls smoothly pass untouched.
+/// The one event tap: Chrome/Edge-on-Windows wheel scrolling (docs/research/windows-scroll.md §8),
+/// Control + wheel zoom, and side buttons that go back and forward in apps that ignore them
+/// (docs/research/windows-buttons.md). It sees wheel events and other-button presses and releases
+/// only; trackpads, Magic Mouse and mice whose driver already scrolls smoothly pass untouched.
 ///
 /// Threads: `apply`, `stop` and the notification handlers run on the main thread, which owns `loop`,
 /// `ended` and `onPermissionLost`. Everything else belongs to the engine thread. Main writes that
 /// state only while no engine thread exists (`stop` waits for it to end) and otherwise hands values
 /// over with `onEngine`.
-final class ScrollEngine: NSObject, @unchecked Sendable {
+final class MouseTap: NSObject, @unchecked Sendable {
     var onPermissionLost: (@MainActor () -> Void)?
 
     private var loop: CFRunLoop?          // main: the engine thread's run loop while the tap runs
@@ -22,10 +23,12 @@ final class ScrollEngine: NSObject, @unchecked Sendable {
     private var health: Timer?
     private var link: CADisplayLink?
     private var settings = Settings()
-    private var frontIsGame = false
-    private var vertical = Axis(), horizontal = Axis()
+    private var front = FrontApp(nil)
+    private var vertical = WheelAxis(), horizontal = WheelAxis()
     private var flags: CGEventFlags = []  // modifiers of the latest notch, for the frames it drives
     private var lastFrame = 0.0           // targetTimestamp of the latest frame
+    private var held: [Int64: KeyStroke] = [:]  // side buttons held back, with the shortcut for their release
+    private var zoomTaken = false         // macOS zoom already uses Control + wheel
 
     override init() {
         super.init()
@@ -33,8 +36,8 @@ final class ScrollEngine: NSObject, @unchecked Sendable {
         _ = workspace.addObserver(
             forName: NSWorkspace.didActivateApplicationNotification, object: nil, queue: .main) { [self] note in
             guard loop != nil else { return }
-            let game = Self.isGame(note.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication)
-            onEngine { self.frontIsGame = game }
+            let app = FrontApp(note.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication)
+            onEngine { self.front = app }
         }
         _ = workspace.addObserver(forName: NSWorkspace.didWakeNotification, object: nil, queue: .main) { [self] _ in
             replaceLink()
@@ -45,13 +48,15 @@ final class ScrollEngine: NSObject, @unchecked Sendable {
         }
     }
 
+    /// Main thread. Starts, updates or stops the tap; false when it is wanted but can't run.
     @discardableResult func apply(_ settings: Settings) -> Bool {
-        guard settings.enabled && settings.scrollEnabled && AXIsProcessTrusted() else {
+        guard settings.needsTap && AXIsProcessTrusted() else {
             stop()
             return false
         }
         guard loop == nil else {
-            onEngine { self.settings = settings }
+            let taken = accessibilityZoomUsesControlWheel()
+            onEngine { self.settings = settings; self.zoomTaken = taken }
             return true
         }
         return start(settings)
@@ -66,22 +71,26 @@ final class ScrollEngine: NSObject, @unchecked Sendable {
     }
 
     private func start(_ settings: Settings) -> Bool {
+        let mask = [CGEventType.scrollWheel, .otherMouseDown, .otherMouseUp]
+            .reduce(CGEventMask(0)) { $0 | CGEventMask(1) << $1.rawValue }
         guard let tap = CGEvent.tapCreate(
             tap: .cghidEventTap, place: .headInsertEventTap, options: .defaultTap,
-            eventsOfInterest: CGEventMask(1) << CGEventType.scrollWheel.rawValue,
+            eventsOfInterest: mask,
             callback: { _, type, event, engine in
-                Unmanaged<ScrollEngine>.fromOpaque(engine!).takeUnretainedValue().handle(type, event)
+                Unmanaged<MouseTap>.fromOpaque(engine!).takeUnretainedValue().handle(type, event)
             },
             userInfo: Unmanaged.passUnretained(self).toOpaque())
         else { return false }
         self.tap = tap
         self.settings = settings
-        frontIsGame = Self.isGame(NSWorkspace.shared.frontmostApplication)
-        vertical = Axis()  // forget what a stopped animation never posted
-        horizontal = Axis()
+        front = FrontApp(NSWorkspace.shared.frontmostApplication)
+        vertical = WheelAxis()  // forget what a stopped animation never posted
+        horizontal = WheelAxis()
+        held = [:]
+        zoomTaken = accessibilityZoomUsesControlWheel()
         let started = DispatchSemaphore(value: 0), ended = DispatchSemaphore(value: 0)
         let thread = Thread { self.run(started, ended) }
-        thread.name = "WinMouse scroll"
+        thread.name = "WinMouse tap"
         thread.qualityOfService = .userInteractive
         thread.start()
         started.wait()
@@ -121,8 +130,9 @@ final class ScrollEngine: NSObject, @unchecked Sendable {
                 self.stop()
                 self.onPermissionLost?()
             }
-        } else if !CGEvent.tapIsEnabled(tap: tap) {
-            CGEvent.tapEnable(tap: tap, enable: true)
+        } else {
+            if !CGEvent.tapIsEnabled(tap: tap) { CGEvent.tapEnable(tap: tap, enable: true) }
+            zoomTaken = accessibilityZoomUsesControlWheel()  // macOS Zoom has no change notification
         }
     }
 
@@ -164,37 +174,52 @@ final class ScrollEngine: NSObject, @unchecked Sendable {
 
     /// Engine thread, inside the tap: stays short, because macOS disables a tap that answers slowly.
     private func handle(_ type: CGEventType, _ event: CGEvent) -> Unmanaged<CGEvent>? {
-        let unchanged = Unmanaged.passUnretained(event)
-        if type == .tapDisabledByTimeout || type == .tapDisabledByUserInput {
+        switch type {
+        case .tapDisabledByTimeout, .tapDisabledByUserInput:
             if let tap { CGEvent.tapEnable(tap: tap, enable: true) }
-            return unchanged
+            held = [:]  // releases may have gone by unseen
+            return Unmanaged.passUnretained(event)
+        case .scrollWheel:
+            return wheel(event) ? nil : Unmanaged.passUnretained(event)
+        case .otherMouseDown, .otherMouseUp:
+            return button(event, down: type == .otherMouseDown) ? nil : Unmanaged.passUnretained(event)
+        default:
+            return Unmanaged.passUnretained(event)
         }
-        guard type == .scrollWheel,
-              // Trackpads, Magic Mouse and smooth-scrolling mouse drivers send pixels or phases.
-              event.getIntegerValueField(.scrollWheelEventIsContinuous) == 0,
-              event.getIntegerValueField(.scrollWheelEventScrollPhase) == 0,
-              event.getIntegerValueField(.scrollWheelEventMomentumPhase) == 0,
-              // Only wheels: remappers and automation post events without a sending device.
-              event.getIntegerValueField(sender) != 0
-        else { return unchanged }
+    }
 
+    // MARK: Wheel
+
+    /// Engine thread: true when the event was taken over and must not reach the app.
+    private func wheel(_ event: CGEvent) -> Bool {
+        guard settings.scrollEnabled, isDeviceNotch(event) else { return false }
         let up = notches(event, .scrollWheelEventDeltaAxis1)
         let left = notches(event, .scrollWheelEventDeltaAxis2)
         // Debug level: costs nothing unless someone streams it (`log stream --level debug ...`).
         log.debug("""
             wheel lines \(event.getIntegerValueField(.scrollWheelEventDeltaAxis1)) \
-            raw \(event.getDoubleValueField(.scrollWheelEventRawDeltaAxis1)) \
-            inverted \(isInvertedFromDevice(event)) sender \(event.getIntegerValueField(sender)) -> notches \(up), \(left)
+            raw \(event.getDoubleValueField(rawDeltaAxis1)) \
+            inverted \(isInvertedFromDevice(event)) sender \(event.getIntegerValueField(senderField)) -> notches \(up), \(left)
             """)
-        guard up != 0 || left != 0 else { return unchanged }
-        let reverse = !settings.naturalDirection && isInvertedFromDevice(event)
-
-        // Games and modifier gestures (zoom and the like) keep macOS behaviour apart from the
-        // direction: smoothed pixel events break weapon and hotbar wheels (existing-apps.md §3.3).
+        guard up != 0 || left != 0 else { return false }
+        let inverted = isInvertedFromDevice(event)
+        let reverse = !settings.naturalDirection && inverted
         let flags = event.flags
-        if frontIsGame || !flags.isDisjoint(with: [.maskCommand, .maskControl, .maskAlternate]) {
+
+        if front.isGame {
+            // Games keep macOS behaviour apart from the direction: smoothed pixel events break
+            // weapon and hotbar wheels (existing-apps.md §3.3).
             if reverse { reverseDirection(event) }
-            return unchanged
+            return false
+        }
+        if settings.controlZoom, up != 0, isControlOnly(flags), !zoomTaken, front.bundleID != nil {
+            // Ctrl + wheel away from the user zooms in (windows-scroll.md §1), one step per notch.
+            postKeys(zoom(in: (inverted ? -up : up) > 0))
+            return true
+        }
+        if !flags.isDisjoint(with: [.maskCommand, .maskControl, .maskAlternate]) {
+            if reverse { reverseDirection(event) }
+            return false
         }
 
         let lines = notchDistance(settings.scrollLines)
@@ -221,7 +246,7 @@ final class ScrollEngine: NSObject, @unchecked Sendable {
             if dx != 0 { horizontal.animation.jump(at: now, distance: dx) }
             post(at: now)
         }
-        return nil
+        return true
     }
 
     /// Engine thread, once per display frame while an animation runs.
@@ -249,63 +274,69 @@ final class ScrollEngine: NSObject, @unchecked Sendable {
         vertical.animation.isFinished(at: t) && horizontal.animation.isFinished(at: t)
     }
 
-    /// Main thread: whether the app declares itself a game in its Info.plist.
-    private static func isGame(_ app: NSRunningApplication?) -> Bool {
-        guard let url = app?.bundleURL,
-              let category = Bundle(url: url)?.object(forInfoDictionaryKey: "LSApplicationCategoryType") as? String
+    // MARK: Buttons
+
+    /// Engine thread: true when the event was taken over. Windows navigates on release
+    /// (windows-buttons.md §1.1), so the press is held back and the shortcut goes out with the
+    /// release, whatever the settings say by then, so no app sees half a click.
+    private func button(_ event: CGEvent, down: Bool) -> Bool {
+        let number = event.getIntegerValueField(.mouseEventButtonNumber)
+        guard let side = SideButton(number) else { return false }
+        guard down else {
+            guard let keys = held.removeValue(forKey: number) else { return false }
+            postKeys(keys)
+            return true
+        }
+        held[number] = nil  // a release the tap missed must not fire later
+        guard settings.sideButtons, !front.isGame,
+              event.flags.isDisjoint(with: [.maskCommand, .maskControl, .maskAlternate, .maskShift]),
+              let keys = navigationKeys(side, app: front.bundleID),
+              // The shortcut goes to the active app; over another app's window the button stays a
+              // button, which Windows would send to that window (windows-buttons.md §7 item 2).
+              isOverFrontApp(event)
         else { return false }
-        return category.contains("games")
+        held[number] = keys
+        return true
+    }
+
+    /// Engine thread: whether the window under the pointer belongs to the active app. Unknown
+    /// windows count as yes, so the menu bar and desktop behave like the app itself.
+    private func isOverFrontApp(_ event: CGEvent) -> Bool {
+        let window = event.getIntegerValueField(.mouseEventWindowUnderMousePointer)
+        guard window > 0, let front = front.pid,
+              let info = CGWindowListCopyWindowInfo(.optionIncludingWindow, CGWindowID(window)) as? [[String: Any]],
+              let owner = info.first?[kCGWindowOwnerPID as String] as? pid_t
+        else { return true }
+        return owner == front
+    }
+
+    /// Engine thread: a key press and release with exactly `keys.flags` held, so the user's own
+    /// modifiers can't turn it into another shortcut.
+    private func postKeys(_ keys: KeyStroke) {
+        for down in [true, false] {
+            guard let event = CGEvent(keyboardEventSource: nil, virtualKey: keys.code, keyDown: down) else { return }
+            event.flags = keys.flags
+            event.post(tap: .cgSessionEventTap)
+        }
     }
 }
 
-/// One axis: its animation and the whole points posted so far, so the sub-point rest carries over.
-private struct Axis {
-    var animation = WheelAnimation()
-    var posted = 0.0
+/// What the tap needs to know about the active app, read on the main thread.
+private struct FrontApp {
+    let bundleID: String?
+    let pid: pid_t?
+    let isGame: Bool  // declares itself a game in its Info.plist
 
-    mutating func step(at t: Double) -> Int32 {
-        let step = (animation.position(at: t) - posted).rounded()
-        posted += step
-        return Int32(max(min(step, 1e6), -1e6))  // a frame never moves this far; just no trap
+    init(_ app: NSRunningApplication?) {
+        bundleID = app?.bundleIdentifier
+        pid = app?.processIdentifier
+        let category = app?.bundleURL.flatMap { Bundle(url: $0)?.object(forInfoDictionaryKey: "LSApplicationCategoryType") } as? String
+        isGame = category?.contains("games") ?? false
     }
 }
 
-private let log = Logger(subsystem: "io.github.anilmetin0.winmouse", category: "scroll")
-
-/// CGEvent field 137, which NSEvent.isDirectionInvertedFromDevice reads (macos-hid.md §5.3).
-private let directionInverted = CGEventField(rawValue: 137)!
-
-/// Undocumented CGEvent field 87: registry ID of the HID service that sent the event, 0 for posted
-/// events (macos-hid.md §5.1, §5.4).
-private let sender = CGEventField(rawValue: 87)!
-
-/// Signed notches on one axis of a discrete wheel event, in the direction macOS delivered it.
-/// ponytail: DeltaAxis is already accelerated (macos-hid.md §1.1), so only its sign counts: one
-/// notch per event. SDK 27's pre-acceleration RawDeltaAxis fields (§5.1) could count the two
-/// notches a fast wheel packs into one report, but their units are unverified until a real wheel
-/// is logged (the debug log prints them), and a wrong unit would multiply every notch.
-func notches(_ event: CGEvent, _ delta: CGEventField) -> Double {
-    Double(event.getIntegerValueField(delta).signum())
+private func isControlOnly(_ flags: CGEventFlags) -> Bool {
+    flags.contains(.maskControl) && flags.isDisjoint(with: [.maskCommand, .maskAlternate, .maskShift])
 }
 
-/// Whether Natural scrolling has already negated this event's deltas. Reading field 137 directly
-/// keeps NSEvent out of the tap; the self-test fails if a macOS update moves it.
-func isInvertedFromDevice(_ event: CGEvent) -> Bool {
-    event.getIntegerValueField(directionInverted) != 0
-}
-
-/// Negates both axes of an event in place and clears its inverted mark. Writing DeltaAxis makes
-/// macOS recompute PointDeltaAxis at 8 pt per line, so the point field goes last (macos-hid.md
-/// §5.2, existing-apps.md §2.6).
-func reverseDirection(_ event: CGEvent) {
-    func negate(_ lines: CGEventField, _ fixed: CGEventField, _ points: CGEventField) {
-        let l = event.getIntegerValueField(lines), f = event.getDoubleValueField(fixed)
-        let p = event.getIntegerValueField(points)
-        event.setIntegerValueField(lines, value: -l)
-        event.setDoubleValueField(fixed, value: -f)
-        event.setIntegerValueField(points, value: -p)
-    }
-    negate(.scrollWheelEventDeltaAxis1, .scrollWheelEventFixedPtDeltaAxis1, .scrollWheelEventPointDeltaAxis1)
-    negate(.scrollWheelEventDeltaAxis2, .scrollWheelEventFixedPtDeltaAxis2, .scrollWheelEventPointDeltaAxis2)
-    event.setIntegerValueField(directionInverted, value: 0)
-}
+private let log = Logger(subsystem: "io.github.anilmetin0.winmouse", category: "tap")
