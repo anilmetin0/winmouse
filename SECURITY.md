@@ -10,5 +10,5 @@ vulnerability reporting feature, currently enabled for this repository. If the f
 unavailable, open a public issue asking for a private reporting channel without including technical
 details.
 
-The v0.1.0 prerelease is experimental and unsupported. Report issues against the current `main`
-branch unless a report specifically affects that prerelease.
+Prereleases are experimental and unsupported. Report issues against the current `main` branch
+unless a report specifically affects a prerelease.

@@ -7,7 +7,7 @@ and Intel Macs.
 ## Runtime flow
 
 `App.swift` owns the app lifecycle. It loads `Settings`, creates the menu bar item and settings
-window, and sends setting changes to `PointerController` and `ScrollEngine`.
+window, and sends setting changes to `PointerController` and `MouseTap`.
 
 `PointerController.swift` watches HID device notifications and finds each external Generic Desktop
 Mouse service. It skips services marked built-in. For a selected service it saves the prior pointer
@@ -16,15 +16,20 @@ those values when disabled, when the user session resigns, and on quit. On launc
 leftover WinMouse marker and attempts recovery. This path uses private macOS HID interfaces and has
 not been validated with a physical mouse yet.
 
-`ScrollEngine.swift` creates a CoreGraphics event tap for scroll-wheel events only. It leaves
-continuous events, events with phases, synthetic events without a sender, game-category apps, and
-Command/Option/Control gestures alone. For the remaining discrete wheel events it converts notches
-to configured distances, animates them with `ScrollAnimation.swift`, and posts pixel scroll events.
-The event tap requires Accessibility access. A five-second health check runs only while the tap is
-active; the animation driver pauses while idle.
+`MouseTap.swift` creates one CoreGraphics event tap for scroll-wheel events and other-button
+presses and releases, on its own thread. For the wheel it leaves continuous events, events with
+phases, synthetic events without a sender, game-category apps, and Command/Option gestures alone.
+Control + wheel becomes Command-= or Command-- per notch unless macOS Zoom uses that gesture. The
+remaining discrete notches become configured distances, animated with `ScrollAnimation.swift` and
+posted as pixel scroll events. `WheelEvents.swift` holds the event-field helpers.
+
+For buttons 3 and 4, `Buttons.swift` decides per frontmost app: pass the button through (apps that
+handle it, and every unknown app), or hold the press back and post the app's Back/Forward shortcut
+on release. The tap requires Accessibility access. A five-second health check runs only while the
+tap is active; the animation driver pauses while idle.
 
 `WindowsPointer.swift` builds the pointer curve and Apple-format HID table. `ScrollAnimation.swift`
-contains the wheel distance and easing model. Their pure calculations are covered by the self-test
+contains the wheel distance and easing model, and `Buttons.swift` the per-app button mapping. Their pure calculations are covered by the self-test
 vectors in `Sources/SelfTest` and the evidence in `docs/research`.
 
 ## State and permissions
@@ -32,7 +37,8 @@ vectors in `Sources/SelfTest` and the evidence in `docs/research`.
 - User settings live in the app's own `UserDefaults` domain. WinMouse does not write global defaults.
 - Pointer changes are stored per HID service. The original table and algorithm are held in the
   service marker to recover values after a crash.
-- Scrolling needs macOS Accessibility permission because WinMouse intercepts and posts wheel events.
+- Scrolling and the side buttons need Accessibility permission because WinMouse intercepts wheel
+  and button events and posts scroll and key events.
   Pointer-table writes do not use that permission path.
 - Open-at-login uses `SMAppService.mainApp` and is opt-in in Settings.
 - The app does not include network code or telemetry.
