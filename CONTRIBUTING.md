@@ -1,7 +1,7 @@
 # Contributing
 
-Contributions are welcome. WinMouse is experimental; physical-mouse behavior and restoration have
-not yet been verified.
+Contributions are welcome: bug reports, mice and apps that behave differently from Windows, and
+code.
 
 ## Before changing behavior
 

@@ -11,8 +11,7 @@ and the date, and it becomes the release notes on GitHub.
 
 ## [0.1.0] - 2026-10-31
 
-First public prerelease. It is experimental: the math passes its reference tests, but behaviour
-with a physical mouse has not been verified yet.
+First public release.
 
 ### Added
 

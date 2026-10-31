@@ -1,160 +1,154 @@
+<div align="center">
+
+<!-- icon -->
+
 # WinMouse
 
-WinMouse makes an external mouse on a Mac behave the way it does on Windows: the same pointer
-curve and speed slider, the same wheel feel, Ctrl + wheel zoom, and side buttons that go back and
-forward. Trackpads keep their macOS behavior.
+**Your mouse, the way it feels on Windows.**
 
-**Status: experimental.** The curve, scroll and button mapping pass the included reference-vector
-tests, and the app builds for Apple Silicon and Intel. Behavior with a physical mouse, permission
-handling and restoration after a crash still need hardware testing.
+A free, open-source menu bar app that gives an external mouse on macOS the Windows pointer
+acceleration, wheel scrolling, Ctrl + wheel zoom and back/forward side buttons.
+
+[![Latest release](https://img.shields.io/github/v/release/anilmetin0/winmouse?include_prereleases&label=release)](https://github.com/anilmetin0/winmouse/releases/latest)
+[![macOS 14+](https://img.shields.io/badge/macOS-14%2B-black?logo=apple)](#requirements)
+[![Apple Silicon and Intel](https://img.shields.io/badge/Apple%20Silicon%20%2B%20Intel-universal-555)](#requirements)
+[![License: MIT](https://img.shields.io/github/license/anilmetin0/winmouse)](LICENSE)
+[![Build](https://img.shields.io/github/actions/workflow/status/anilmetin0/winmouse/release.yml?branch=main&label=build)](https://github.com/anilmetin0/winmouse/actions/workflows/release.yml)
+
+[**Download**](https://github.com/anilmetin0/winmouse/releases/latest) ·
+[Features](#features) · [Install](#install) · [FAQ](#faq) · [Türkçe](#türkçe)
+
+</div>
+
+## Why
+
+If your hands learned the mouse on Windows, a Mac feels wrong. The pointer starts slow and then
+shoots off, and one wheel notch scrolls a different distance every time. That comes from macOS's
+own acceleration curve and its trackpad-style scrolling, and the Mouse settings cannot turn either
+into what Windows does.
+
+Most Mac mouse utilities turn acceleration off or make the wheel glide like a trackpad. WinMouse
+copies Windows instead. The curve comes from the Windows registry defaults, the scrolling from
+Chromium's source, and every number is documented in [`docs/research`](docs/research).
 
 ## Features
 
-### Pointer
+**Windows pointer acceleration.** The "Enhance pointer precision" curve and the Windows pointer
+speed slider (1 to 20, default 10), applied by macOS itself to each external mouse. It costs
+nothing while the mouse moves and needs no permission. Turn precision off and you get Windows'
+linear speeds.
 
-WinMouse builds its curve from the Windows default curve and pointer speed setting (1 to 20,
-default 10). It supplies the curve as an acceleration table for each external mouse. With
-"Enhance pointer precision" off, it uses the linear speed settings from the Windows model.
+**Windows wheel scrolling.** Every notch moves the same distance: 3 lines, with the short
+ease-in-out of Chrome and Edge on Windows. There is no acceleration, no momentum and no bounce.
+Shift + wheel scrolls sideways, and the tilt wheel scrolls by characters.
 
-### Wheel
+**Ctrl + wheel zoom.** Control with the wheel zooms in browsers and other apps, one step per
+notch, as on Windows.
 
-Wheel scrolling is designed for a fixed distance per notch (3 lines, 100 points) with a short
-ease-in-out. It does not add speed-based acceleration or momentum. Shift with the wheel scrolls
-sideways. The wheel keeps the Windows direction when the trackpad uses natural scrolling.
+**Back and forward buttons.** The side buttons go back and forward when you release them, as on
+Windows. Chrome, Edge, Firefox, VS Code and JetBrains IDEs get the buttons directly, while Finder,
+Safari, System Settings, App Store, Music, TV, Preview and Xcode get their own Back and Forward
+shortcuts.
 
-Control with the wheel zooms, as Ctrl + wheel does on Windows: each notch away from you presses
-Command-=, each notch toward you Command--. Chrome on the Mac ignores Ctrl + wheel, so keystrokes
-work in Chrome as well as Safari. If macOS Zoom is set to zoom the screen with Control
-and the wheel, WinMouse leaves it alone.
+**Only the mouse changes.** Trackpads, the Magic Mouse's touch scrolling and games keep their
+macOS behaviour. The scroll direction stays Windows-style even with Natural scrolling on for the
+trackpad.
 
-Trackpads, the Magic Mouse's touch scrolling, apps that declare themselves games, and wheel
-gestures with Command or Option keep their macOS behaviour.
+**Settings with Windows names.** Each setting has the name and default of its Windows
+counterpart. The app is in English and Turkish.
 
-### Buttons
-
-On Windows the side buttons go back and forward in every window. On a Mac, Chrome, Edge, Firefox,
-VS Code and JetBrains IDEs already do that and get the buttons untouched. Finder, Safari, System
-Settings, the App Store, Music, TV and Preview ignore them, so WinMouse presses their Back and
-Forward shortcuts (Command-[ and Command-]; Control-Command-arrow in Xcode). It acts when you
-release the button, as Windows does. Other apps keep the buttons, because Command-[ means indent
-in many of them.
-
-The middle button, right-click and double-click already behave like Windows in macOS browsers
-and are left alone.
-
-## Requirements
-
-- macOS 14 Sonoma or later.
-- Accessibility access, for the wheel and the side buttons. The pointer needs no permission.
-
-## Install
-
-1. Download `WinMouse-<version>.dmg` from the
-   [latest release](https://github.com/anilmetin0/winmouse/releases/latest).
-2. Open it and drag WinMouse to Applications.
-3. Open WinMouse. The app is not notarized, so macOS blocks the first launch. Go to
-   System Settings > Privacy & Security, scroll to the message about WinMouse and click
-   Open Anyway.
-4. When macOS asks, allow WinMouse in System Settings > Privacy & Security > Accessibility.
-
-A mouse icon appears in the menu bar and the settings window opens.
-
-To check the download, compare its checksum with the `.sha256` file from the same release:
-
-```sh
-shasum -a 256 -c WinMouse-<version>.dmg.sha256
-```
-
-### Build from source
-
-With macOS 14 or later and Xcode or the Xcode Command Line Tools:
-
-```sh
-git clone https://github.com/anilmetin0/winmouse.git
-cd winmouse
-./build.sh
-cp -R build/WinMouse.app /Applications/
-open /Applications/WinMouse.app
-```
-
-`./build.sh dmg` also makes the disk image. After a rebuild, macOS may no longer recognise the
-Accessibility permission, because it is tied to the app's signature and a local build gets a new
-one every time. Remove WinMouse from the Accessibility list and add it again, or sign with a
-certificate of your own: `CODESIGN_IDENTITY="Your Certificate" ./build.sh`.
-
-## Settings
-
-The settings use Windows names and defaults.
-
-| Setting | On Windows | Default |
+| Setting | Windows counterpart | Default |
 |---|---|---|
 | Pointer speed | Mouse pointer speed | 10 of 20 |
 | Enhance pointer precision | Enhance pointer precision | On |
 | Lines to scroll at a time | Lines to scroll at a time | 3 |
 | Characters to scroll horizontally | Horizontal scrolling | 3 |
-| Smooth scrolling | Smooth scrolling in Chrome and Edge | On, off when Reduce Motion is on |
+| Smooth scrolling | Smooth scrolling in Chrome and Edge | On (off with Reduce Motion) |
 | Scrolling direction | Down motion scrolls down | Windows |
 | Control + wheel zooms | Ctrl + wheel zoom | On |
 | Side buttons go back and forward | Back and forward buttons | On |
 
-The menu bar icon pauses and resumes WinMouse.
+## Install
 
-## What it does to your Mac
+1. Download `WinMouse-<version>.dmg` from the
+   [latest release](https://github.com/anilmetin0/winmouse/releases/latest).
+2. Open it and drag **WinMouse** to **Applications**.
+3. Open WinMouse. It is not notarized by Apple, so the first launch is blocked: open
+   **System Settings > Privacy & Security**, find the message about WinMouse and click
+   **Open Anyway**.
+4. Allow WinMouse in **System Settings > Privacy & Security > Accessibility** when asked. The
+   wheel and the side buttons need it.
 
-WinMouse does not write global system preferences. For each detected external mouse, it changes
-per-device HID properties and saves their original values on the service. It attempts to restore
-them on pause and quit, and recover after a crash on the next launch. Disconnecting the mouse or
-restarting the Mac clears the service override. These behaviors have not yet been checked with a
-physical mouse. Avoid running another mouse utility that changes the same HID properties or wheel
-events.
+A mouse icon appears in the menu bar. Click it to pause WinMouse or open its settings.
 
-## How it matches Windows
+### Requirements
 
-Each number comes from a source, collected in `docs/research`:
+- macOS 14 Sonoma or later, on Apple Silicon or Intel.
+- A mouse with a wheel. Side buttons and a tilt wheel are optional.
 
-- [windows-pointer.md](docs/research/windows-pointer.md): the Windows pointer curve, the speed
-  slider and the "Enhance pointer precision" math. The model fits INRIA's measurements of real
-  Windows pointer output to within 0.02 %.
-- [windows-scroll.md](docs/research/windows-scroll.md): the distance per notch and the animation,
-  taken from Chromium's source.
-- [macos-hid.md](docs/research/macos-hid.md): where macOS applies acceleration and how an app can
-  replace a device's curve.
-- [existing-apps.md](docs/research/existing-apps.md): what LinearMouse, Mac Mouse Fix, Mos and
-  others do, and the problems their users reported.
+### Build from source
 
-Known differences from Windows:
+```sh
+git clone https://github.com/anilmetin0/winmouse.git
+cd winmouse
+./build.sh        # runs the self-tests, then builds build/WinMouse.app
+./build.sh dmg    # also builds the disk image
+```
 
-- macOS measures the speed of a movement as its straight-line length. Windows adds the longer axis
-  and half of the shorter one, so a diagonal movement counts as up to 12 % slower on the Mac and
-  gets a little less acceleration.
-- When the mouse speeds up into a steeper part of the curve, Windows blends the old and new
-  segments for one report. A macOS table cannot do that.
-- Side buttons only reach the apps listed above; unknown apps keep the raw buttons.
-- The shortcuts are sent as key positions. On keyboard layouts where `[` or `=` sit on another key,
-  an app that matches shortcuts by character may not react. Tell us which app.
-- WinMouse uses private HID interfaces. A macOS update could change them. If pointer behavior is
-  wrong, quit the app and reconnect the mouse or restart the Mac.
+This needs Xcode or the Command Line Tools. See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
-## Uninstall
+## FAQ
 
-Quit WinMouse from its menu, delete it from Applications and remove it from the Accessibility list
-in System Settings.
+**Does it change my system settings?**
+No. WinMouse writes nothing to system preferences. It sets the pointer curve on each external
+mouse's own device entry and keeps the previous values. Those values go back when you pause or
+quit WinMouse, and at the next launch if it crashed. Unplugging the mouse or restarting the Mac
+also clears them.
 
-## Development
+**Why does it need Accessibility access?**
+To read wheel and side-button events and post the scrolling and shortcuts that replace them. The
+pointer curve works without it. WinMouse has no network code and collects nothing.
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for build and change guidelines. The app source is in
-`Sources/WinMouse`, the self-tests are in `Sources/SelfTest`, and the research behind behavior and
-constants is in `docs/research`. See the [architecture](docs/architecture.md) and
-[hardware testing](docs/testing.md) notes for implementation details and verification steps.
+**Can I run it next to LinearMouse, Mac Mouse Fix or Mos?**
+Quit them first. They change the same mouse settings and wheel events, and the two apps undo each
+other. WinMouse warns you in its settings when one of them is running.
 
-## Project status
+**A side button does nothing in my app.**
+WinMouse only sends shortcuts to the apps listed above, because Command-[ means indent in many
+others. Shortcuts are sent by key position, so with a keyboard layout where `[` sits elsewhere
+an app may not react. [Open an issue](https://github.com/anilmetin0/winmouse/issues) with the
+app's name and your layout.
 
-The [prereleases](https://github.com/anilmetin0/winmouse/releases) are
-experimental and has no Developer ID signature or notarization.
-See [CHANGELOG.md](CHANGELOG.md) for project history and [releasing.md](docs/releasing.md) for the
-release process. Report security issues using GitHub's private reporting feature; do not publish
-exploit details in a public issue. See [SECURITY.md](SECURITY.md).
+**Can a macOS update break it?**
+The pointer curve uses a private macOS interface, so a future macOS could change it. If the
+pointer ever feels wrong, quit WinMouse and reconnect the mouse; that restores macOS's own curve.
+
+**How close is it to Windows?**
+The curve and the scrolling use Windows' and Chromium's own numbers. Two small differences
+remain: macOS measures diagonal movement a little slower (up to 12 %), and it cannot blend two
+curve segments the way Windows does for one report. The [research notes](docs/research) have the
+details.
+
+**How do I uninstall it?**
+Quit WinMouse from its menu, move it from Applications to the Trash and remove it from the
+Accessibility list in System Settings.
+
+## Türkçe
+
+WinMouse, Mac'e takılan harici farenin Windows'taki gibi davranmasını sağlayan ücretsiz ve açık
+kaynaklı bir menü çubuğu uygulamasıdır. Windows'un imleç ivmesini ("İşaretçi hassasiyetini
+artır" ve imleç hızı), tekerlek kaydırmasını, Ctrl + tekerlek yakınlaştırmayı ve geri/ileri yan
+tuşlarını getirir. İzleme dörtgenine dokunmaz. Uygulama Türkçedir;
+[son sürümü](https://github.com/anilmetin0/winmouse/releases/latest) indirip yukarıdaki kurulum
+adımlarını izleyin.
+
+## Contributing
+
+Bug reports, mice or apps that behave differently from Windows, and pull requests are welcome.
+Read [CONTRIBUTING.md](CONTRIBUTING.md) first. The [architecture](docs/architecture.md) and
+[testing](docs/testing.md) notes explain how the app works and how to check a change. Report
+security issues privately, as described in [SECURITY.md](SECURITY.md).
 
 ## License
 
-MIT. See [LICENSE](LICENSE).
+[MIT](LICENSE)

@@ -1,7 +1,7 @@
 # Security policy
 
-WinMouse is experimental, and its per-device HID behavior has not yet been validated with a
-physical mouse.
+WinMouse changes per-device HID properties and posts input events, so security reports are taken
+seriously.
 
 ## Reporting a vulnerability
 
@@ -10,5 +10,4 @@ vulnerability reporting feature, currently enabled for this repository. If the f
 unavailable, open a public issue asking for a private reporting channel without including technical
 details.
 
-Prereleases are experimental and unsupported. Report issues against the current `main` branch
-unless a report specifically affects a prerelease.
+Report issues against the latest release or the current `main` branch.
