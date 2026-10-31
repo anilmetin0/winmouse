@@ -8,6 +8,8 @@
 	<string>WinMouse</string>
 	<key>CFBundleExecutable</key>
 	<string>WinMouse</string>
+	<key>CFBundleIconFile</key>
+	<string>AppIcon</string>
 	<key>CFBundleIdentifier</key>
 	<string>io.github.anilmetin0.winmouse</string>
 	<key>CFBundleInfoDictionaryVersion</key>

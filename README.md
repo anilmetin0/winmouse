@@ -1,6 +1,6 @@
 <div align="center">
 
-<!-- icon -->
+<img src="docs/assets/icon.png" width="128" height="128" alt="WinMouse icon">
 
 # WinMouse
 
@@ -16,6 +16,7 @@ acceleration, wheel scrolling, Ctrl + wheel zoom and back/forward side buttons.
 [![Build](https://img.shields.io/github/actions/workflow/status/anilmetin0/winmouse/release.yml?branch=main&label=build)](https://github.com/anilmetin0/winmouse/actions/workflows/release.yml)
 
 [**Download**](https://github.com/anilmetin0/winmouse/releases/latest) ·
+[Website](https://anilmetin0.github.io/winmouse/) ·
 [Features](#features) · [Install](#install) · [FAQ](#faq) · [Türkçe](#türkçe)
 
 </div>

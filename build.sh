@@ -31,7 +31,7 @@ for arch in arm64 x86_64; do
 done
 lipo -create build/WinMouse-arm64 build/WinMouse-x86_64 -output "$APP/Contents/MacOS/WinMouse"
 cp Resources/Info.plist "$APP/Contents/Info.plist"
-cp -R Resources/*.lproj "$APP/Contents/Resources/" 2>/dev/null || true
+cp -R Resources/*.lproj Resources/AppIcon.icns "$APP/Contents/Resources/"
 
 # Accessibility permission is tied to the signature. An ad-hoc signature changes with every build,
 # so macOS forgets the permission after a rebuild; CODESIGN_IDENTITY="Your Certificate" avoids that.

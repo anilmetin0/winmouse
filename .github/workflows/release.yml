@@ -58,6 +58,7 @@ jobs:
           GH_REPO: ${{ github.repository }}
         run: |
           version="${GITHUB_REF_NAME#v}"
-          prerelease=$([[ "$version" == 0.* || "$version" == *-* ]] && echo --prerelease || true)
+          # Only suffixed versions (1.2.0-beta.1) are prereleases, so releases/latest always has a download.
+          prerelease=$([[ "$version" == *-* ]] && echo --prerelease || true)
           gh release create "$GITHUB_REF_NAME" WinMouse-*.dmg WinMouse-*.dmg.sha256 \
             --title "WinMouse $version" --notes-file notes.md --verify-tag $prerelease
