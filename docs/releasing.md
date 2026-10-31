@@ -1,29 +1,28 @@
 # Releasing
 
-Releases are created from version tags. The GitHub Actions workflow runs the self-tests, builds the
-universal app, zips `WinMouse.app`, calculates a SHA-256 checksum, and creates a prerelease with both
-files attached.
+Releases are made from version tags. For a `vX.Y.Z` tag, the `Build and release` workflow runs the
+self-tests, builds the universal app, packs it into `WinMouse-X.Y.Z.dmg` with a SHA-256 file, and
+publishes a GitHub release whose notes are the `X.Y.Z` section of `CHANGELOG.md`. Versions below
+1.0.0 and versions with a suffix such as `-beta.1` are marked as prereleases.
 
 ## Before tagging
 
-1. Confirm the version in `Resources/Info.plist` matches the intended `vX.Y.Z` tag.
-2. Move the corresponding `CHANGELOG.md` entries from `Unreleased` to a dated version heading.
-3. Run `./build.sh` on macOS and review the resulting app.
-4. Complete the physical-mouse checks in [`testing.md`](testing.md), or keep the release marked
-   experimental and state which hardware checks remain unverified.
-5. Make sure the `main` branch CI run is green.
+1. Set `CFBundleShortVersionString` in `Resources/Info.plist` to `X.Y.Z` and raise
+   `CFBundleVersion` by one. The workflow stops if the tag and the app version differ.
+2. In `CHANGELOG.md`, rename `Unreleased` to `[X.Y.Z] - YYYY-MM-DD`, add a new empty
+   `Unreleased` above it, and update the comparison links at the bottom.
+3. Run `./build.sh dmg`, open the disk image and try the app.
+4. Complete the physical-mouse checks in [`testing.md`](testing.md), or say in the changelog which
+   ones were not run.
+5. Commit as `Release X.Y.Z` and make sure CI on `main` is green.
 
 ## Publish
 
-Push a version tag such as `v0.1.0`. The `Build and release` workflow creates a prerelease. It does
-not sign the app with a Developer ID certificate or notarize it. macOS may require the user to
-approve opening the downloaded app. Do not describe the build as notarized or ready for general
-installation.
-
-The ZIP contains the app bundle. Verify it after downloading:
-
 ```sh
-shasum -a 256 -c WinMouse-v0.1.0-macos-universal.zip.sha256
+git tag -a vX.Y.Z -m "WinMouse X.Y.Z"
+git push origin vX.Y.Z
 ```
 
-Replace `v0.1.0` in the filename with the version being checked.
+The app is signed ad hoc, not with a Developer ID certificate, and is not notarized. macOS asks
+the user to approve the first launch in System Settings > Privacy & Security. Do not describe a
+build as notarized.

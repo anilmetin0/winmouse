@@ -49,7 +49,25 @@ and are left alone.
 
 ## Install
 
-Build from source with macOS 14 or later and Xcode or the Xcode Command Line Tools:
+1. Download `WinMouse-<version>.dmg` from the
+   [latest release](https://github.com/anilmetin0/winmouse/releases/latest).
+2. Open it and drag WinMouse to Applications.
+3. Open WinMouse. The app is not notarized, so macOS blocks the first launch. Go to
+   System Settings > Privacy & Security, scroll to the message about WinMouse and click
+   Open Anyway.
+4. When macOS asks, allow WinMouse in System Settings > Privacy & Security > Accessibility.
+
+A mouse icon appears in the menu bar and the settings window opens.
+
+To check the download, compare its checksum with the `.sha256` file from the same release:
+
+```sh
+shasum -a 256 -c WinMouse-<version>.dmg.sha256
+```
+
+### Build from source
+
+With macOS 14 or later and Xcode or the Xcode Command Line Tools:
 
 ```sh
 git clone https://github.com/anilmetin0/winmouse.git
@@ -59,17 +77,10 @@ cp -R build/WinMouse.app /Applications/
 open /Applications/WinMouse.app
 ```
 
-A mouse icon appears in the menu bar and the settings window opens. The first time, macOS asks for
-Accessibility access: allow WinMouse in System Settings > Privacy & Security > Accessibility.
-
-After a rebuild, macOS may no longer recognise the permission, because it is tied to the app's
-signature and a local build gets a new one every time. Remove WinMouse from the Accessibility list
-and add it again, or sign with a certificate of your own:
-`CODESIGN_IDENTITY="Your Certificate" ./build.sh`.
-This signs only your local build; WinMouse releases do not use a project Developer ID certificate.
-
-If you installed NewMouse before the rename, quit and remove the old app before opening WinMouse.
-The new bundle identifier starts with fresh app settings and needs its own Accessibility grant.
+`./build.sh dmg` also makes the disk image. After a rebuild, macOS may no longer recognise the
+Accessibility permission, because it is tied to the app's signature and a local build gets a new
+one every time. Remove WinMouse from the Accessibility list and add it again, or sign with a
+certificate of your own: `CODESIGN_IDENTITY="Your Certificate" ./build.sh`.
 
 ## Settings
 

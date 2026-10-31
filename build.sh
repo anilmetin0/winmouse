@@ -3,6 +3,7 @@
 # cannot run inside a sandboxed shell (it nests its own sandbox for the manifest).
 #   ./build.sh            self-test, then build/WinMouse.app (arm64 + x86_64)
 #   ./build.sh selftest   self-test only
+#   ./build.sh dmg        all of the above, then build/WinMouse-<version>.dmg and its SHA-256
 set -euo pipefail
 cd "$(dirname "$0")"
 
@@ -36,3 +37,17 @@ cp -R Resources/*.lproj "$APP/Contents/Resources/" 2>/dev/null || true
 # so macOS forgets the permission after a rebuild; CODESIGN_IDENTITY="Your Certificate" avoids that.
 codesign --force --sign "${CODESIGN_IDENTITY:--}" --timestamp=none "$APP"
 echo "Ready: $APP"
+[[ "${1:-}" == "dmg" ]] || exit 0
+
+# A disk image with the app and a link to /Applications, so installing is one drag.
+VERSION=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP/Contents/Info.plist")
+DMG="build/WinMouse-$VERSION.dmg"
+STAGE="build/dmg"
+rm -rf "$STAGE" "$DMG"
+mkdir -p "$STAGE"
+cp -R "$APP" "$STAGE/"
+ln -s /Applications "$STAGE/Applications"
+hdiutil create -quiet -volname "WinMouse $VERSION" -srcfolder "$STAGE" -fs HFS+ -format UDZO -ov "$DMG"
+rm -rf "$STAGE"
+(cd build && shasum -a 256 "$(basename "$DMG")" > "$(basename "$DMG").sha256")
+echo "Ready: $DMG"
