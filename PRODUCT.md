@@ -42,3 +42,5 @@ settings, then only to pause it. Settings mirror the Windows controls by name an
 1. Faithful to Windows numbers over taste: every constant has evidence behind it.
 2. Keep changes per device and restore its saved values when WinMouse stops.
 3. Invisible when working: no notifications, no chrome beyond a menu bar icon.
+4. The user chooses the action; the app manages the required steps. An update owns downloading,
+   verification, orderly shutdown and reopening rather than asking the user to perform them.

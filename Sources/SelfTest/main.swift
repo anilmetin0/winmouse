@@ -15,6 +15,7 @@ func check(_ ok: Bool, _ what: @autoclosure () -> String, file: StaticString = #
 pointerTests()
 scrollTests()
 buttonTests()
+updateTests()
 
 if failures > 0 {
     print("selftest: \(failures) failure(s)")

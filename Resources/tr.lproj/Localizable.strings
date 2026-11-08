@@ -33,3 +33,35 @@
 "Side buttons go back and forward" = "Yan tuşlar geri ve ileri gider";
 "Finder, Safari and other Apple apps go back and forward too. Games keep their own buttons." = "Finder, Safari ve diğer Apple uygulamaları da geri ve ileri gider. Oyunlar kendi tuşlarını korur.";
 "Open at login" = "Girişte aç";
+
+/* Updates */
+"Updates" = "Güncellemeler";
+"Check for Updates…" = "Güncellemeleri Denetle…";
+"WinMouse Updates" = "WinMouse Güncellemeleri";
+"Checking for updates…" = "Güncellemeler denetleniyor…";
+"Cancel" = "İptal";
+"Done" = "Tamam";
+"Later" = "Daha Sonra";
+"Close" = "Kapat";
+"Try Again" = "Yeniden Dene";
+"Release Notes" = "Sürüm Notları";
+"Install and Relaunch" = "Yükle ve Yeniden Aç";
+"WinMouse %@ is up to date" = "WinMouse %@ güncel";
+"WinMouse %@ is available" = "WinMouse %@ kullanılabilir";
+"Installed version: %@" = "Yüklü sürüm: %@";
+"Downloading and verifying the update…" = "Güncelleme indiriliyor ve doğrulanıyor…";
+"Installing the update…" = "Güncelleme yükleniyor…";
+"Could not update WinMouse" = "WinMouse güncellenemedi";
+"WinMouse will download the update, verify it, and restart. macOS may ask you to allow Accessibility again." = "WinMouse güncellemeyi indirip doğrulayacak ve yeniden açılacak. macOS yeniden Erişilebilirlik izni isteyebilir.";
+"Homebrew will update this copy and restart WinMouse. macOS may ask you to allow Accessibility again." = "Homebrew bu kopyayı güncelleyecek ve WinMouse yeniden açılacak. macOS yeniden Erişilebilirlik izni isteyebilir.";
+"The update information is invalid. Your installed copy has not changed." = "Güncelleme bilgisi geçersiz. Yüklü kopya değiştirilmedi.";
+"The update could not be downloaded. Check your connection and try again." = "Güncelleme indirilemedi. Bağlantınızı kontrol edip yeniden deneyin.";
+"The downloaded file failed verification. Your installed copy has not changed." = "İndirilen dosya doğrulanamadı. Yüklü kopya değiştirilmedi.";
+"The download does not contain the expected WinMouse version." = "İndirilen dosya beklenen WinMouse sürümünü içermiyor.";
+"WinMouse cannot update in this location. Move it to Applications or use Homebrew." = "WinMouse bu konumda güncellenemiyor. Uygulamayı Uygulamalar klasörüne taşıyın veya Homebrew kullanın.";
+"The updater could not be started. Your installed copy has not changed." = "Güncelleyici başlatılamadı. Yüklü kopya değiştirilmedi.";
+"WinMouse did not quit in time. The update was cancelled." = "WinMouse zamanında kapanmadı. Güncelleme iptal edildi.";
+"Homebrew could not complete the update. Try brew upgrade --cask winmouse in Terminal." = "Homebrew güncellemeyi tamamlayamadı. Terminal’de brew upgrade --cask winmouse komutunu deneyin.";
+"Cancelling the update…" = "Güncelleme iptal ediliyor…";
+"The update failed. Your previous copy is saved at %@." = "Güncelleme tamamlanamadı. Önceki kopya şu konumda saklanıyor: %@.";
+"This update requires a newer version of macOS." = "Bu güncelleme daha yeni bir macOS sürümü gerektiriyor.";

@@ -96,8 +96,14 @@ brew upgrade --cask winmouse
 Homebrew closes and reopens a running copy automatically.
 
 If scrolling or side buttons stop working after an update, remove WinMouse from the Accessibility
-list and add `/Applications/WinMouse.app` again. Homebrew manages updates; WinMouse does not
-check the network or install updates itself.
+list and add `/Applications/WinMouse.app` again.
+
+### Update in WinMouse
+
+Choose **Check for Updates…** from the menu bar or **Settings > Updates**, then
+**Install and Relaunch**. WinMouse downloads and verifies the update before restarting.
+Homebrew-managed copies update through Homebrew from the same window.
+Checks run only when requested; there is no background update timer.
 
 ### Disk image
 
@@ -138,7 +144,8 @@ also clears them.
 
 **Why does it need Accessibility access?**
 To read wheel and side-button events and post the scrolling and shortcuts that replace them. The
-pointer curve works without it. WinMouse has no network code and collects nothing.
+pointer curve works without it. Update checks and downloads contact GitHub when you request
+them. WinMouse has no telemetry.
 
 **Can I run it next to LinearMouse, Mac Mouse Fix or Mos?**
 Quit them first. They change the same mouse settings and wheel events, and the two apps undo each
@@ -182,7 +189,12 @@ verin, ardından Erişilebilirlik iznini açın.
 `brew update` ve `brew upgrade --cask winmouse` komutlarını çalıştırın. Homebrew, uygulama
 açıksa kapatıp yeniden açar. Güncellemeden sonra tekerlek veya yan tuşlar çalışmazsa
 WinMouse'u Erişilebilirlik listesinden kaldırıp `/Applications/WinMouse.app` dosyasını yeniden
-ekleyin. Güncellemeleri Homebrew yönetir; uygulama arka planda güncelleme aramaz.
+ekleyin.
+
+Uygulama içinden güncellemek için menüdeki **Güncellemeleri Denetle…** seçeneğini veya
+**Ayarlar > Güncellemeler** bölümünü açıp **Yükle ve Yeniden Aç**'a basın. WinMouse indirmeyi,
+doğrulamayı ve yeniden başlatmayı yönetir. Homebrew ile kurulmuş kopyalar da aynı ekrandan
+Homebrew aracılığıyla güncellenir. Arka planda periyodik güncelleme kontrolü yapılmaz.
 
 ## Contributing
 

@@ -66,3 +66,24 @@ Finally verify restoration:
 Do not describe hardware behavior as verified until these checks have been run on the target Mac and
 mouse. Record the macOS version, mouse model/connection, observed result, and any failures with the
 release checklist.
+
+## Native update acceptance
+
+`./build.sh` also checks stable-version parsing, exact release URLs, SHA-256, bundle replacement,
+rollback, failed-replacement preservation, and Homebrew receipt/config matching.
+
+On a logged-in Mac with XcodeBuildMCP available, run `python3 scripts/test-native-update.py`.
+It builds unique-identity app fixtures, substitutes mouse controllers that perform no HID writes,
+serves fixture responses through URLProtocol, and exercises the production App/Updater/helper
+path. The expected trace is launch 0.2.0 → available → stop → restore → launch 0.3.0. The new
+fixture exits after recording its shutdown. Its apps, DMG and trace remain in the reported
+temporary directory for inspection. This does not install into Applications or test real HID.
+
+Manually check the update window's available, current, downloading, cancelled and error states,
+including Try Again, in English and Turkish. Verify the app icon appears and text fits. The
+0.3.0 pass verified the available/error/retry states visually and passed the native fixture upgrade.
+
+For Homebrew, verify an installed, running copy closes and reopens with
+`brew update && brew upgrade --cask winmouse`. A stopped copy should remain stopped. The isolated
+/tmp fixture verified the upgrade and quit/reopen scheduling; Launch Services did not resolve its
+temporary bundle ID. Confirm the final reopen on a normal Applications installation.

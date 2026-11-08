@@ -16,9 +16,9 @@ MIN=14.0
 SWIFTC=(xcrun swiftc -O -swift-version 6 -disable-sandbox -sdk "$SDK" -module-cache-path build/ModuleCache)
 mkdir -p build
 
-# The pure math and event mapping (no AppKit, no event taps) against docs/research.
+# Reference math, event mapping and update file checks; no event tap or HID writes.
 TESTED=(Sources/WinMouse/WindowsPointer.swift Sources/WinMouse/ScrollAnimation.swift
-        Sources/WinMouse/WheelEvents.swift Sources/WinMouse/Buttons.swift)
+        Sources/WinMouse/WheelEvents.swift Sources/WinMouse/Buttons.swift Sources/Shared/UpdateSupport.swift)
 "${SWIFTC[@]}" -target "arm64-apple-macos$MIN" "${TESTED[@]}" Sources/SelfTest/*.swift -o build/selftest
 build/selftest
 [[ "${1:-}" == "selftest" ]] && exit 0
@@ -27,14 +27,17 @@ APP="build/WinMouse.app"
 rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 for arch in arm64 x86_64; do
-    "${SWIFTC[@]}" -parse-as-library -target "$arch-apple-macos$MIN" Sources/WinMouse/*.swift -o "build/WinMouse-$arch"
+    "${SWIFTC[@]}" -parse-as-library -target "$arch-apple-macos$MIN" Sources/WinMouse/*.swift Sources/Shared/*.swift -o "build/WinMouse-$arch"
+    "${SWIFTC[@]}" -parse-as-library -target "$arch-apple-macos$MIN" Sources/UpdateHelper/main.swift Sources/Shared/*.swift -o "build/WinMouseUpdater-$arch"
 done
 lipo -create build/WinMouse-arm64 build/WinMouse-x86_64 -output "$APP/Contents/MacOS/WinMouse"
+lipo -create build/WinMouseUpdater-arm64 build/WinMouseUpdater-x86_64 -output "$APP/Contents/MacOS/WinMouseUpdater"
 cp Resources/Info.plist "$APP/Contents/Info.plist"
 cp -R Resources/*.lproj Resources/AppIcon.icns "$APP/Contents/Resources/"
 
 # Accessibility permission is tied to the signature. An ad-hoc signature changes with every build,
 # so macOS forgets the permission after a rebuild; CODESIGN_IDENTITY="Your Certificate" avoids that.
+codesign --force --sign "${CODESIGN_IDENTITY:--}" --timestamp=none "$APP/Contents/MacOS/WinMouseUpdater"
 codesign --force --sign "${CODESIGN_IDENTITY:--}" --timestamp=none "$APP"
 echo "Ready: $APP"
 [[ "${1:-}" == "dmg" ]] || exit 0
@@ -50,4 +53,7 @@ ln -s /Applications "$STAGE/Applications"
 hdiutil create -quiet -volname "WinMouse $VERSION" -srcfolder "$STAGE" -fs HFS+ -format UDZO -ov "$DMG"
 rm -rf "$STAGE"
 (cd build && shasum -a 256 "$(basename "$DMG")" > "$(basename "$DMG").sha256")
+if [[ "$VERSION" != *-* ]]; then
+    python3 scripts/update-manifest.py "$VERSION" "$DMG" > build/update.json
+fi
 echo "Ready: $DMG"

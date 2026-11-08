@@ -44,6 +44,7 @@ jobs:
             build/WinMouse-*.dmg
             build/WinMouse-*.dmg.sha256
             build/notes.md
+            build/update.json
           if-no-files-found: error
 
   release:
@@ -82,3 +83,9 @@ jobs:
           content_sha=$(git hash-object Casks/winmouse.rb)
           python3 scripts/update-cask.py "$version" "$checksum" --github-sha "$content_sha" > cask-update.json
           gh api --method PUT "repos/$GH_REPO/contents/Casks/winmouse.rb" --input cask-update.json
+      - name: Publish native update information
+        if: ${{ !contains(github.ref_name, '-') }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: gh release upload "$GITHUB_REF_NAME" update.json

@@ -5,6 +5,10 @@ self-tests, builds the universal app, packs it into `WinMouse-X.Y.Z.dmg` with a 
 publishes a GitHub release whose notes are the `X.Y.Z` section of `CHANGELOG.md`. Versions with a
 suffix such as `-beta.1` are marked as prereleases and do not become the latest release.
 
+Stable releases also include `update.json`, generated from the exact disk image. Native checks
+use `/releases/latest/download/update.json`. It is uploaded after the cask has been pinned, so
+the native Homebrew route sees the corresponding cask version.
+
 After a stable release is published, the workflow updates `Casks/winmouse.rb` on `main` with
 the released version and the disk image's SHA-256. The cask stays pinned to the previous stable
 release until that point; never use `sha256 :no_check` for it. No separate tap repository is needed:
@@ -41,7 +45,7 @@ build as notarized.
 
 ## Check after publishing
 
-- Verify both assets on the GitHub release and their SHA-256, and confirm the cask's version
+- Verify the DMG, checksum and update manifest on the GitHub release and their SHA-256, and confirm the cask's version
   and checksum match the released disk image.
 - Confirm the cask update commit reached `main`, and test its download without installing
   over a developer's working copy.

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <title>WinMouse</title>
+  <rect x="100" y="100" width="824" height="824" rx="185" fill="#1f5c45"/>
+  <path d="M512 252C626 252 700 324 700 450V604C700 716 618 790 512 790S324 716 324 604V450C324 324 398 252 512 252Z" fill="#f3f7ea"/>
+  <path d="M512 252V470M324 470Q512 506 700 470" fill="none" stroke="#9ab5a7" stroke-width="16"/>
+  <rect x="480" y="316" width="64" height="120" rx="32" fill="#f2cf4a" stroke="#184a37" stroke-width="8"/>
+</svg>

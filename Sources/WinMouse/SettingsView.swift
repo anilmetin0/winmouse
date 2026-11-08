@@ -5,6 +5,7 @@ import SwiftUI
 struct SettingsView: View {
     @ObservedObject var state: AppState
     let openAccessibilitySettings: () -> Void
+    let openUpdates: () -> Void
 
     // Defaults match Settings.swift, which registers the same defaults at launch.
     @AppStorage(Settings.Key.enabled) private var enabled = true
@@ -97,6 +98,12 @@ struct SettingsView: View {
                 Text("Buttons")
             } footer: {
                 Text("Finder, Safari and other Apple apps go back and forward too. Games keep their own buttons.").foregroundStyle(.secondary)
+            }
+
+            Section("Updates") {
+                Button(action: openUpdates) {
+                    Label("Check for Updates…", systemImage: "arrow.triangle.2.circlepath")
+                }
             }
 
             Section {

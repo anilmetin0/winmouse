@@ -15,7 +15,7 @@ private let rivalApps: Set<String> = ["com.lujjjh.LinearMouse", "com.nuebling.ma
 
 @main
 @MainActor
-final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
+final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWindowDelegate {
     static func main() {
         let app = NSApplication.shared
         let delegate = AppDelegate()
@@ -26,6 +26,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private let state = AppState()
     private let pointer = PointerController()
     private let tap = MouseTap()
+    private let updater = Updater()
+    private var updateWindow: NSWindow?
     private var statusItem: NSStatusItem?
     private var settingsWindow: NSWindow?
     private var applied: Settings?
@@ -34,7 +36,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         Settings.registerDefaults()
 
         let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
-        item.button?.image = NSImage(systemSymbolName: "computermouse", accessibilityDescription: "WinMouse")
+        let menuIcon = NSImage(systemSymbolName: "computermouse", accessibilityDescription: "WinMouse")
+        menuIcon?.size = NSSize(width: 18, height: 18)
+        menuIcon?.isTemplate = true
+        item.button?.image = menuIcon
         item.menu = NSMenu()
         item.menu?.delegate = self
         statusItem = item
@@ -63,7 +68,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             AXIsProcessTrustedWithOptions(["AXTrustedCheckOptionPrompt": true] as CFDictionary)
         }
         // A menu bar app shows nothing when it starts, so the first launch opens the settings.
-        if !UserDefaults.standard.bool(forKey: "launchedBefore") {
+        if !UserDefaults.standard.bool(forKey: "launchedBefore") || state.needsAccessibility {
             UserDefaults.standard.set(true, forKey: "launchedBefore")
             openSettings()
         }
@@ -79,6 +84,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     func applicationWillTerminate(_ notification: Notification) {
         tap.stop()
         pointer.restoreAll()
+    }
+
+    func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
+        guard updater.busy && !updater.installing else { return .terminateNow }
+        Task {
+            await updater.cancelAndWait()
+            sender.reply(toApplicationShouldTerminate: true)
+        }
+        return .terminateLater
     }
 
     private func apply(force: Bool) {
@@ -117,6 +131,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         }
         menu.addItem(.separator())
         menu.addItem(NSMenuItem(title: String(localized: "Settings…"), action: #selector(openSettings), keyEquivalent: ","))
+        menu.addItem(NSMenuItem(title: String(localized: "Check for Updates…"), action: #selector(openUpdates), keyEquivalent: ""))
+        menu.items.last?.image = NSImage(systemSymbolName: "arrow.triangle.2.circlepath", accessibilityDescription: nil)
         menu.addItem(NSMenuItem(title: String(localized: "Quit WinMouse"), action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
         for item in menu.items where item.action != #selector(NSApplication.terminate(_:)) {
             item.target = self
@@ -133,7 +149,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     @objc private func openSettings() {
         if settingsWindow == nil {
-            let view = SettingsView(state: state, openAccessibilitySettings: { [weak self] in self?.openAccessibilitySettings() })
+            let view = SettingsView(state: state, openAccessibilitySettings: { [weak self] in self?.openAccessibilitySettings() },
+                                    openUpdates: { [weak self] in self?.openUpdates() })
             let controller = NSHostingController(rootView: view)
             controller.sizingOptions = .preferredContentSize   // the window follows the form's height
             let window = NSWindow(contentViewController: controller)
@@ -145,5 +162,31 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         }
         NSApp.activate()
         settingsWindow?.makeKeyAndOrderFront(nil)
+    }
+
+    @objc private func openUpdates() {
+        if updateWindow == nil {
+            let view = UpdateView(updater: updater, close: { [weak self] in self?.updateWindow?.close() })
+            let controller = NSHostingController(rootView: view)
+            controller.sizingOptions = .preferredContentSize
+            let window = NSWindow(contentViewController: controller)
+            window.title = String(localized: "WinMouse Updates")
+            window.styleMask = [.titled, .closable]
+            window.isReleasedWhenClosed = false
+            window.delegate = self
+            window.center()
+            updateWindow = window
+        }
+        NSApp.activate()
+        updateWindow?.makeKeyAndOrderFront(nil)
+        if !updater.busy { updater.check() }
+    }
+
+    func windowShouldClose(_ sender: NSWindow) -> Bool {
+        sender !== updateWindow || !updater.installing
+    }
+
+    func windowWillClose(_ notification: Notification) {
+        if let window = notification.object as? NSWindow, window === updateWindow { updater.cancel() }
     }
 }

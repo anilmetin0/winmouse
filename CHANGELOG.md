@@ -9,6 +9,43 @@ and the date, and it becomes the release notes on GitHub.
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-11-08
+
+### Added
+
+- Check for Updates in the menu bar and Settings. Install and Relaunch handles downloading,
+  verification, installation and restarting. Homebrew-managed copies use Homebrew from the same
+  window, preserving the cask receipt.
+- Native update manifests are published with every stable release. Checks are manual; no
+  background polling or update preference is added.
+- Update tests cover manifest validation, SHA-256, actual bundle replacement/rollback and an
+  end-to-end upgrade with a separate test identity and mouse controllers that do not write HID.
+
+### Fixed
+
+- Removed manual Quit and reopen instructions from Homebrew updates. Homebrew manages a running
+  app's lifecycle; the native updater restores mouse state before restarting itself.
+- Update errors and cancellation keep the installed copy. A failed relaunch restores the previous
+  bundle; if restoration itself fails, the helper keeps the backup and reports its location.
+- Missing Accessibility access opens Settings after an update or relaunch.
+
+### Changed
+
+- Regenerated the macOS iconset from the existing WinMouse vector, with clearer 16/32-point
+  variants, a template menu-bar symbol and the WinMouse icon in the update window.
+- Applied the same brand assets to the README, favicons and landing pages; macOS download buttons
+  now use the Apple mark.
+- Updated the English and Turkish installation and update instructions.
+
+### Validation
+
+- The native upgrade test downloads a fixture, verifies it, calls the normal shutdown path,
+  replaces the bundle, relaunches the new version and verifies its signature. It uses mock mouse
+  controllers, so this is not physical-mouse acceptance.
+- Homebrew's isolated test upgraded and quit the fixture and attempted its automatic reopen.
+  Launch Services did not resolve the temporary fixture's bundle ID; production installation
+  behavior in Applications still needs user confirmation. No custom executable hooks were added.
+
 ## [0.2.0] - 2026-11-08
 
 ### Added
@@ -71,6 +108,7 @@ First public release.
 - A universal build for Apple Silicon and Intel, distributed as a disk image with a SHA-256
   checksum.
 
-[Unreleased]: https://github.com/anilmetin0/winmouse/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/anilmetin0/winmouse/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/anilmetin0/winmouse/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/anilmetin0/winmouse/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/anilmetin0/winmouse/releases/tag/v0.1.0

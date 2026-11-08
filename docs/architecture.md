@@ -47,7 +47,11 @@ vectors in `Sources/SelfTest` and the evidence in `docs/research`.
   and button events and posts scroll and key events.
   Pointer-table writes do not use that permission path.
 - Open-at-login uses `SMAppService.mainApp` and is opt-in in Settings.
-- The app does not include network code or telemetry.
+- Update checks/downloads contact GitHub only when requested. There is no update timer or telemetry.
+- `Updater.swift` owns the update window and request/cancellation state. `UpdateSupport.swift`
+  validates stable release metadata, exact asset URLs, sizes, hashes, bundles and Homebrew receipts.
+  The signed helper in `Contents/MacOS` waits for normal shutdown before replacing or upgrading
+  the app and reopening it. Manual replacements keep a rollback copy until launch succeeds.
 
 ## Platform limits
 
