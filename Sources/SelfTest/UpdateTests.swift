@@ -1,6 +1,11 @@
 import Foundation
 
 func updateTests() {
+    let now = Date(timeIntervalSince1970: 1_000_000)
+    check(updateCheckIsDue(last: nil, now: now), "first automatic check is due")
+    check(!updateCheckIsDue(last: now.addingTimeInterval(-86399), now: now), "no duplicate daily checks")
+    check(updateCheckIsDue(last: now.addingTimeInterval(-86400), now: now), "next daily check is due")
+    check(updateCheckIsDue(last: now.addingTimeInterval(10), now: now), "recover from a backwards clock change")
     check(ReleaseVersion("0.10.0")! > ReleaseVersion("0.9.9")!, "versions compare numerically")
     for text in ["", "1", "1.2", "1.2.3.4", "01.2.3", "1.2.3-beta", "1.2.-1", "1.2.3\n", "1.2.9999999999999999999999999"] {
         check(ReleaseVersion(text) == nil, "reject invalid stable version: \(text.debugDescription)")

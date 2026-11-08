@@ -20,6 +20,7 @@ struct SettingsView: View {
     @AppStorage(Settings.Key.sideButtons) private var sideButtons = true
     @AppStorage(Settings.Key.controlZoom) private var controlZoom = true
     @State private var openAtLogin = SMAppService.mainApp.status == .enabled
+    @AppStorage(Settings.Key.automaticUpdates) private var automaticUpdates = true
 
     var body: some View {
         Form {
@@ -101,6 +102,7 @@ struct SettingsView: View {
             }
 
             Section("Updates") {
+                Toggle("Automatic updates", isOn: $automaticUpdates)
                 Button(action: openUpdates) {
                     Label("Check for Updates…", systemImage: "arrow.triangle.2.circlepath")
                 }

@@ -21,6 +21,7 @@ struct Settings: Equatable, Sendable {
         static let enhancePointerPrecision = "enhancePointerPrecision", scrollEnabled = "scrollEnabled"
         static let scrollLines = "scrollLines", scrollChars = "scrollChars", smoothScrolling = "smoothScrolling"
         static let naturalDirection = "naturalDirection", sideButtons = "sideButtons", controlZoom = "controlZoom"
+        static let automaticUpdates = "automaticUpdates"
     }
 
     /// Whether anything needs the event tap, and so Accessibility access.
@@ -43,6 +44,7 @@ struct Settings: Equatable, Sendable {
             Key.naturalDirection: initial.naturalDirection,
             Key.sideButtons: initial.sideButtons,
             Key.controlZoom: initial.controlZoom,
+            Key.automaticUpdates: true,
         ])
     }
 

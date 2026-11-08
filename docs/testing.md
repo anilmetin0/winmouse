@@ -72,10 +72,12 @@ release checklist.
 `./build.sh` also checks stable-version parsing, exact release URLs, SHA-256, bundle replacement,
 rollback, failed-replacement preservation, and Homebrew receipt/config matching.
 
-On a logged-in Mac with XcodeBuildMCP available, run `python3 scripts/test-native-update.py`.
+On a logged-in Mac with XcodeBuildMCP available, run `python3 scripts/test-native-update.py`
+and `python3 scripts/test-native-update.py --automatic`.
 It builds unique-identity app fixtures, substitutes mouse controllers that perform no HID writes,
 serves fixture responses through URLProtocol, and exercises the production App/Updater/helper
-path. The expected trace is launch 0.2.0 → available → stop → restore → launch 0.3.0. The new
+path. The manual trace is launch 0.2.0 → available → stop → restore → launch 0.3.0. The automatic
+variant makes no manual check/install calls and must reach the same new launch from startup. The new
 fixture exits after recording its shutdown. Its apps, DMG and trace remain in the reported
 temporary directory for inspection. This does not install into Applications or test real HID.
 

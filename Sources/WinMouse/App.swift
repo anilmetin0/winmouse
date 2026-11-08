@@ -31,6 +31,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWind
     private var statusItem: NSStatusItem?
     private var settingsWindow: NSWindow?
     private var applied: Settings?
+    private var menuOpen = false
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         Settings.registerDefaults()
@@ -53,7 +54,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWind
         // including window frames, and `apply` ignores what isn't a setting.
         NotificationCenter.default.addObserver(
             forName: UserDefaults.didChangeNotification, object: UserDefaults.standard, queue: .main) { [weak self] _ in
-            MainActor.assumeIsolated { self?.apply(force: false) }
+            MainActor.assumeIsolated {
+                self?.apply(force: false)
+                self?.updater.preferencesChanged()
+            }
         }
 
         let workspace = NSWorkspace.shared.notificationCenter
@@ -61,6 +65,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWind
             workspace.addObserver(self, selector: #selector(updateRivals), name: name, object: nil)
         }
         updateRivals()
+        updater.canRestartAutomatically = { [weak self] in
+            guard let self else { return false }
+            return !menuOpen && settingsWindow?.isVisible != true && updateWindow?.isVisible != true
+                && tap.canRestartForUpdate
+        }
+        tap.onInputIdle = { [weak self] in self?.updater.installAutomaticallyIfReady() }
+        for name in [NSWorkspace.didWakeNotification, NSWorkspace.sessionDidBecomeActiveNotification] {
+            workspace.addObserver(self, selector: #selector(checkAutomaticUpdates), name: name, object: nil)
+        }
 
         apply(force: true)
         if state.needsAccessibility {
@@ -72,7 +85,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWind
             UserDefaults.standard.set(true, forKey: "launchedBefore")
             openSettings()
         }
+        updater.checkIfDue()
     }
+
+    @objc private func checkAutomaticUpdates() { updater.checkIfDue() }
 
     @objc private func updateRivals() {
         let names = NSWorkspace.shared.runningApplications
@@ -84,6 +100,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWind
     func applicationWillTerminate(_ notification: Notification) {
         tap.stop()
         pointer.restoreAll()
+        updater.discardPrepared()
     }
 
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
@@ -108,6 +125,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWind
     /// Retry when the user returns from System Settings, without an idle permission timer.
     func applicationDidBecomeActive(_ notification: Notification) {
         retryPermission()
+        updater.checkIfDue()
     }
 
     private func retryPermission() {
@@ -116,6 +134,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWind
     }
 
     // MARK: Menu
+
+    func menuWillOpen(_ menu: NSMenu) {
+        menuOpen = true
+        updater.checkIfDue()
+    }
 
     func menuNeedsUpdate(_ menu: NSMenu) {
         retryPermission()
@@ -137,6 +160,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWind
         for item in menu.items where item.action != #selector(NSApplication.terminate(_:)) {
             item.target = self
         }
+    }
+
+    func menuDidClose(_ menu: NSMenu) {
+        menuOpen = false
+        updater.installAutomaticallyIfReady()
     }
 
     @objc private func toggleEnabled() {
@@ -179,7 +207,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWind
         }
         NSApp.activate()
         updateWindow?.makeKeyAndOrderFront(nil)
-        if !updater.busy { updater.check() }
+        if !updater.busy && !updater.hasPreparedUpdate { updater.check() }
     }
 
     func windowShouldClose(_ sender: NSWindow) -> Bool {
@@ -188,5 +216,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSWind
 
     func windowWillClose(_ notification: Notification) {
         if let window = notification.object as? NSWindow, window === updateWindow { updater.cancel() }
+        DispatchQueue.main.async { self.updater.installAutomaticallyIfReady() }
     }
 }

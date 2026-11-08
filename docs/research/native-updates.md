@@ -23,8 +23,9 @@ then its helper reopens the app by its explicit path. No custom cask executable 
 
 ## Native delivery contract
 
-The menu and Settings expose a manual update check. There are no background checks or new idle
-timers. The HTTPS endpoint is this repository's stable release asset:
+Updates are enabled by default, with one Settings switch to disable them. Like AndroMac,
+checks happen at launch and UI entry, plus wake/session activation, at most once per 24 hours.
+There is no repeating update timer. The manual menu check remains available. The HTTPS endpoint is this repository's stable release asset:
 `https://github.com/anilmetin0/winmouse/releases/latest/download/update.json`.
 GitHub's [release asset download documentation](https://docs.github.com/en/repositories/releasing-projects-on-github/linking-to-releases)
 explains the stable `/releases/latest/download/asset-name` URL. It avoids the unauthenticated API
@@ -53,6 +54,12 @@ checksum checks. Dependent upgrades and automatic cleanup are disabled for this 
 
 ## Operational bounds
 
+- Daily cadence: 24 × 60 × 60 seconds, following AndroMac's `UpdateCheck.interval` and its
+  event-driven `checkIfDue` approach. A backwards clock change permits one fresh check.
+- Automatic installs wait for the app's windows/menu to close and its own wheel animation and
+  held-side-button work to finish. The engine reports idle transitions; no motion/drag/left/right
+  event taps or polling are introduced. Failed automatic handoffs are not retried in a loop for
+  the same release; the user can retry manually.
 - Manifest limit: 64 KiB; the generated manifest is only a few hundred bytes. This is a parser
   bound, not an input-behavior constant. The download's expected size comes from the built image.
 - Helper shutdown deadline: 30 seconds, checked every 100 ms only during an update. A process

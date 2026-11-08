@@ -65,3 +65,4 @@
 "Cancelling the update…" = "Güncelleme iptal ediliyor…";
 "The update failed. Your previous copy is saved at %@." = "Güncelleme tamamlanamadı. Önceki kopya şu konumda saklanıyor: %@.";
 "This update requires a newer version of macOS." = "Bu güncelleme daha yeni bir macOS sürümü gerektiriyor.";
+"Automatic updates" = "Otomatik güncellemeler";

@@ -1,5 +1,12 @@
 import Foundation
 
+/// Event-driven daily checks, matching the existing AndroMac update cadence.
+func updateCheckIsDue(last: Date?, now: Date = Date()) -> Bool {
+    guard let last else { return true }
+    let age = now.timeIntervalSince(last)
+    return age < 0 || age >= 24 * 60 * 60
+}
+
 /// Stable releases only; ordering must be numeric (0.10.0 is newer than 0.9.0).
 struct ReleaseVersion: Comparable, Equatable, Sendable {
     let components: [Int]

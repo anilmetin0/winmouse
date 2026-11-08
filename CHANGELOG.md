@@ -13,11 +13,12 @@ and the date, and it becomes the release notes on GitHub.
 
 ### Added
 
-- Check for Updates in the menu bar and Settings. Install and Relaunch handles downloading,
-  verification, installation and restarting. Homebrew-managed copies use Homebrew from the same
-  window, preserving the cask receipt.
-- Native update manifests are published with every stable release. Checks are manual; no
-  background polling or update preference is added.
+- Automatic update checks and installation. WinMouse downloads and verifies a stable release,
+  then restarts when its windows are closed and the input engine is idle. Homebrew-managed copies
+  use Homebrew, preserving the cask receipt. Automatic updates can be turned off in Settings.
+- Check for Updates remains in the menu and Settings. Install and Relaunch provides a manual
+  fallback. Checks are event-driven and limited to once a day; no repeating timer is added.
+- Native update manifests are published with every stable release.
 - Update tests cover manifest validation, SHA-256, actual bundle replacement/rollback and an
   end-to-end upgrade with a separate test identity and mouse controllers that do not write HID.
 

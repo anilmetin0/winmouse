@@ -13,6 +13,24 @@ import QuartzCore
 /// over with `onEngine`.
 final class MouseTap: NSObject, @unchecked Sendable {
     var onPermissionLost: (@MainActor () -> Void)?
+    var onInputIdle: (@MainActor () -> Void)?
+    private let updateLock = NSLock()
+    private var updateIdle = true
+
+    @MainActor var canRestartForUpdate: Bool {
+        guard loop != nil else { return true }
+        updateLock.lock()
+        defer { updateLock.unlock() }
+        return updateIdle
+    }
+
+    private func setUpdateIdle(_ idle: Bool) {
+        updateLock.lock()
+        let becameIdle = idle && !updateIdle
+        updateIdle = idle
+        updateLock.unlock()
+        if becameIdle { DispatchQueue.main.async { self.onInputIdle?() } }
+    }
 
     private var loop: CFRunLoop?          // main: the engine thread's run loop while the tap runs
     private var ended: DispatchSemaphore? // main: signalled when that thread has finished
@@ -96,6 +114,7 @@ final class MouseTap: NSObject, @unchecked Sendable {
         sequence = WheelSequence()
         lastFrame = 0
         held = [:]
+        setUpdateIdle(true)
         zoomTaken = accessibilityZoomUsesControlWheel()
         let started = DispatchSemaphore(value: 0), ended = DispatchSemaphore(value: 0)
         let thread = Thread { self.run(started, ended) }
@@ -189,6 +208,7 @@ final class MouseTap: NSObject, @unchecked Sendable {
             cancelScroll()
             if let tap { CGEvent.tapEnable(tap: tap, enable: true) }
             held = [:]  // releases may have gone by unseen
+            setUpdateIdle(true)
             return Unmanaged.passUnretained(event)
         case .scrollWheel:
             return wheel(event) ? nil : Unmanaged.passUnretained(event)
@@ -270,6 +290,7 @@ final class MouseTap: NSObject, @unchecked Sendable {
             if dy != 0 { vertical.animation.notch(at: now, distance: dy) }
             if dx != 0 { horizontal.animation.notch(at: now, distance: dx) }
             link.isPaused = false
+            setUpdateIdle(false)
         } else {
             if dy != 0 { vertical.animation.jump(at: now, distance: dy) }
             if dx != 0 { horizontal.animation.jump(at: now, distance: dx) }
@@ -283,6 +304,7 @@ final class MouseTap: NSObject, @unchecked Sendable {
         lastFrame = link.targetTimestamp
         post(at: lastFrame)
         link.isPaused = idle(at: lastFrame)
+        setUpdateIdle(link.isPaused && held.isEmpty)
     }
 
     /// Engine thread: posts how far the animations moved since the last post, in whole points.
@@ -308,6 +330,7 @@ final class MouseTap: NSObject, @unchecked Sendable {
         vertical = WheelAxis()
         horizontal = WheelAxis()
         link?.isPaused = true
+        setUpdateIdle(held.isEmpty)
     }
 
     private func idle(at t: Double) -> Bool {
@@ -323,8 +346,12 @@ final class MouseTap: NSObject, @unchecked Sendable {
         let number = event.getIntegerValueField(.mouseEventButtonNumber)
         guard let side = SideButton(number) else { return false }
         guard down else {
-            guard let press = held.removeValue(forKey: number) else { return false }
+            guard let press = held.removeValue(forKey: number) else {
+                setUpdateIdle(idle(at: CACurrentMediaTime()) && held.isEmpty)
+                return false
+            }
             if press.pid == front.pid { postKeys(press.keys) }
+            setUpdateIdle(idle(at: CACurrentMediaTime()) && held.isEmpty)
             return true
         }
         held[number] = nil  // a release the tap missed must not fire later
@@ -334,8 +361,12 @@ final class MouseTap: NSObject, @unchecked Sendable {
               // The shortcut goes to the active app; over another app's window the button stays a
               // button, which Windows would send to that window (windows-buttons.md §7 item 2).
               isOverFrontApp(event)
-        else { return false }
+        else {
+            setUpdateIdle(idle(at: CACurrentMediaTime()) && held.isEmpty)
+            return false
+        }
         held[number] = (keys, front.pid)
+        setUpdateIdle(false)
         return true
     }
 

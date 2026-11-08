@@ -1,5 +1,6 @@
 from pathlib import Path
-import subprocess,shutil,plistlib,hashlib,json,tempfile,time,uuid
+import subprocess,shutil,plistlib,hashlib,json,tempfile,time,uuid,sys
+automatic="--automatic" in sys.argv
 repo=Path(__file__).resolve().parent.parent
 root=Path(tempfile.mkdtemp(prefix='winmouse-native-update-'))
 fixture_id='io.github.anilmetin0.winmouse-update-test.'+uuid.uuid4().hex
@@ -26,6 +27,9 @@ app=app.replace('Settings.registerDefaults()', '''URLProtocol.registerClass(Upda
             Task { try? await Task.sleep(for: .seconds(3)); NSApp.terminate(nil) }
         }
         Settings.registerDefaults()''',1)
+app=app.replace('"launchedBefore": true]', '"launchedBefore": true, "automaticUpdates": '+('true' if automatic else 'false')+']')
+if automatic:
+ app=app.replace('if Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String == "0.2.0" {','if false {')
 (root/'App.swift').write_text(app)
 (root/'Fixture.swift').write_text('''import AppKit
 import Foundation
@@ -41,7 +45,8 @@ func fixtureRecord(_ event:String) {
  func restoreAll() { fixtureRecord("restore") }
 }
 @MainActor final class MouseTap {
- var onPermissionLost:(@MainActor ()->Void)?
+ var onPermissionLost:(@MainActor ()->Void)?; var onInputIdle:(@MainActor ()->Void)?
+ var canRestartForUpdate:Bool { true }
  func apply(_ settings:Settings)->Bool { true }
  func stop() { fixtureRecord("stop") }
 }
@@ -89,9 +94,10 @@ while time.monotonic()<deadline:
  time.sleep(0.2)
 else: raise RuntimeError(f'Update timed out; inspect {root}')
 expected=['launch 0.2.0','available 0.2.0','stop 0.2.0','restore 0.2.0','launch 0.3.0','stop 0.3.0','restore 0.3.0']
+if automatic: expected.remove('available 0.2.0')
 assert log.splitlines()==expected,log
 installed=root/'0.2.0/WinMouse.app'
 assert plistlib.loads((installed/'Contents/Info.plist').read_bytes())['CFBundleShortVersionString']=='0.3.0'
 subprocess.run(['/usr/bin/codesign','--verify','--deep','--strict',str(installed)],check=True)
 print(log,flush=True)
-print('Native update: verified download -> orderly shutdown -> bundle replacement -> relaunch PASS',flush=True)
+print(('Automatic' if automatic else 'Manual')+' native update: verified download -> orderly shutdown -> bundle replacement -> relaunch PASS',flush=True)

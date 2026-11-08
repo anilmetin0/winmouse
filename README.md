@@ -100,10 +100,10 @@ list and add `/Applications/WinMouse.app` again.
 
 ### Update in WinMouse
 
-Choose **Check for Updates…** from the menu bar or **Settings > Updates**, then
-**Install and Relaunch**. WinMouse downloads and verifies the update before restarting.
-Homebrew-managed copies update through Homebrew from the same window.
-Checks run only when requested; there is no background update timer.
+WinMouse checks for updates automatically and installs a verified release when its settings
+window is closed and no wheel animation or side-button action is in progress. Homebrew-managed
+copies update through Homebrew. You can turn this off in **Settings > Updates** or use
+**Check for Updates…** from the menu. There is no repeating update timer.
 
 ### Disk image
 
@@ -144,8 +144,7 @@ also clears them.
 
 **Why does it need Accessibility access?**
 To read wheel and side-button events and post the scrolling and shortcuts that replace them. The
-pointer curve works without it. Update checks and downloads contact GitHub when you request
-them. WinMouse has no telemetry.
+pointer curve works without it. Automatic update checks and downloads contact GitHub. You can turn them off in Settings. WinMouse has no telemetry.
 
 **Can I run it next to LinearMouse, Mac Mouse Fix or Mos?**
 Quit them first. They change the same mouse settings and wheel events, and the two apps undo each
@@ -191,10 +190,11 @@ açıksa kapatıp yeniden açar. Güncellemeden sonra tekerlek veya yan tuşlar 
 WinMouse'u Erişilebilirlik listesinden kaldırıp `/Applications/WinMouse.app` dosyasını yeniden
 ekleyin.
 
-Uygulama içinden güncellemek için menüdeki **Güncellemeleri Denetle…** seçeneğini veya
-**Ayarlar > Güncellemeler** bölümünü açıp **Yükle ve Yeniden Aç**'a basın. WinMouse indirmeyi,
-doğrulamayı ve yeniden başlatmayı yönetir. Homebrew ile kurulmuş kopyalar da aynı ekrandan
-Homebrew aracılığıyla güncellenir. Arka planda periyodik güncelleme kontrolü yapılmaz.
+WinMouse güncellemeleri otomatik denetler, indirir ve doğrular. Ayarlar penceresi kapalıyken,
+kaydırma veya yan tuş işlemi sürmüyorsa yeni sürümü yükleyip yeniden açılır. Homebrew ile
+kurulmuş kopyalar Homebrew üzerinden güncellenir. **Ayarlar > Güncellemeler** bölümünden
+otomatik yüklemeyi kapatabilir veya menüdeki **Güncellemeleri Denetle…** seçeneğini kullanabilirsiniz.
+Sürekli çalışan bir güncelleme zamanlayıcısı yoktur.
 
 ## Contributing
 
