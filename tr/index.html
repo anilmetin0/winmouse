@@ -27,8 +27,8 @@
   <meta name="twitter:image:alt" content="WinMouse on a green desk mat with the Windows pointer acceleration curve printed on it.">
   <meta name="robots" content="index, follow">
   <meta name="theme-color" content="#1f5c45">
-  <link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
-  <link rel="icon" href="../images/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="../images/favicon.svg?v=0.2.0" type="image/svg+xml">
+  <link rel="icon" href="../images/favicon-32.png?v=0.2.0" sizes="32x32" type="image/png">
   <link rel="apple-touch-icon" href="../images/apple-touch-icon.png">
   <link rel="preload" href="../fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="../site.css">
@@ -44,7 +44,7 @@
   <div class="ruler" aria-hidden="true"></div>
   <header class="top">
     <div class="wrap">
-      <a class="brand" href="./" aria-label="WinMouse"><img src="../images/icon-72.png" alt="" width="36" height="36"><span class="brand-name">WinMouse</span></a>
+      <a class="brand" href="./" aria-label="WinMouse"><img src="../images/icon-72.png" srcset="../images/icon-72.png 72w, ../images/icon-144.png 144w" sizes="36px" alt="" width="36" height="36"><span class="brand-name">WinMouse</span></a>
       <nav aria-label="Main">
         <a href="#download">İndir</a>
         <a href="#pointer">Nasıl çalışır</a>
@@ -63,9 +63,9 @@
     <div class="hero-copy">
       <h1>Mac'inizde <span class="hi">Windows</span> imleci ve tekerleği</h1>
       <p class="lede">WinMouse, harici fareye Windows'un imleç eğrisini, hız ayarını ve tekerlek kaydırmasını getiren ücretsiz bir menü çubuğu uygulaması. Control + tekerlek yakınlaştırır, yan tuşlar geri ve ileri gider. İzleme dörtgenleri macOS'taki gibi çalışmaya devam eder.</p>
-      <p class="reqs">macOS 14 veya üstü, Apple silicon ve Intel. Açık kaynak, MIT lisansı.</p>
+      <p class="reqs"><svg fill="currentColor" class="platform-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Apple</title><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>macOS 14 veya üstü, Apple silicon ve Intel. Açık kaynak, MIT lisansı.</p>
       <div class="actions">
-        <a class="btn" href="#download"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>Mac için indir</a>
+        <a class="btn" href="#download"><svg fill="currentColor" class="platform-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Apple</title><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>Mac için indir</a>
         <a class="btn ghost" href="https://github.com/anilmetin0/winmouse">GitHub'daki kaynak kodu</a>
       </div>
     </div>
@@ -112,18 +112,12 @@ brew install --cask anilmetin0/winmouse/winmouse
 open -a WinMouse</pre></div>
         <div class="copy-row"><button class="btn ghost copy" type="button" data-copy="brew" data-label="Komutları kopyala"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg><svg class="ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span class="lbl" aria-live="polite">Komutları kopyala</span></button></div>
         <p class="note">Homebrew 7 ve sonrasında <code>brew trust</code> gerekir. Eski sürümlerde bu satırı atlayabilirsiniz.</p>
-        <h4 class="update-heading">Güncelleme</h4>
-        <p class="note">Homebrew WinMouse’u günceller; uygulama açıksa yeniden açar:</p>
-        <div class="term"><pre id="brew-update" tabindex="0">brew update
-brew upgrade --cask winmouse</pre></div>
-        <div class="copy-row"><button class="btn ghost copy" type="button" data-copy="brew-update" data-label="Güncelleme komutlarını kopyala"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg><svg class="ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span class="lbl" aria-live="polite">Güncelleme komutlarını kopyala</span></button></div>
-        <p class="note">İlk açılış için Gizlilik ve Güvenlik’ten Yine de Aç’ı seçin, ardından Erişilebilirlik izni verin. Güncellemeden sonra tekerlek çalışmazsa WinMouse’u Erişilebilirlik listesinden kaldırıp yeniden ekleyin.</p>
-        <p class="note"><a data-release-notes href="https://github.com/anilmetin0/winmouse/releases/latest">Sürüm notları</a></p>
+
       </div>
       <div class="card" data-reveal>
         <h3>Disk imajı</h3>
         <p class="sub">Sürüm <span data-version>0.2.0</span>. macOS 14 Sonoma veya üstü, Apple silicon ve Intel.</p>
-        <a class="btn" data-asset="dmg" href="https://github.com/anilmetin0/winmouse/releases/latest"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>Mac için indir</a>
+        <a class="btn" data-asset="dmg" href="https://github.com/anilmetin0/winmouse/releases/latest"><svg fill="currentColor" class="platform-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Apple</title><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>Mac için indir</a>
         <p class="file">Dosyanın adı <code>WinMouse-<span data-version>0.2.0</span>.dmg</code>. SHA-256 sağlama toplamı aynı sürüm sayfasında.</p>
         <ol class="steps">
           <li><div><b>Kurun</b><p>İndirilen dosyayı açın ve WinMouse'u Uygulamalar klasörüne sürükleyin.</p></div></li>
@@ -353,13 +347,6 @@ open /Applications/WinMouse.app</pre></div>
         <summary>Neden Erişilebilirlik izni istiyor?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></summary>
         <div class="ans">
           <p>Tekerlek kaydırmasını ve yan tuşları değiştirmek için WinMouse'un giriş olaylarını okuyup göndermesi gerekir. macOS buna yalnızca Erişilebilirlik izniyle olanak tanır. İmleç eğrisi için izin gerekmez.</p>
-        </div>
-      </details>
-      <details>
-        <summary>WinMouse’u nasıl güncellerim?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></summary>
-        <div class="ans">
-          <p><code>brew update</code> ve <code>brew upgrade --cask winmouse</code> komutlarını çalıştırın. Uygulama açıksa Homebrew kapatıp yeniden açar.</p>
-          <p>macOS Erişilebilirlik iznini uygulamanın imzasına bağlar ve yeni bir derlemenin imzası farklı olabilir. WinMouse'u Sistem Ayarları → Gizlilik ve Güvenlik → Erişilebilirlik listesinden kaldırıp yeniden ekleyin.</p>
         </div>
       </details>
       <details>
