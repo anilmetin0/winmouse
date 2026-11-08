@@ -32,7 +32,7 @@
   <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
   <link rel="preload" href="fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="site.css">
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "WinMouse", "description": "A free macOS menu-bar app that gives an external mouse the Windows pointer curve, speed slider and wheel scrolling, Control + wheel zoom and back and forward side buttons.", "url": "https://anilmetin0.github.io/winmouse/", "inLanguage": "en", "image": "https://anilmetin0.github.io/winmouse/images/icon-256.png", "operatingSystem": "macOS 14 or later", "applicationCategory": "UtilitiesApplication", "softwareVersion": "0.1.0", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "license": "https://opensource.org/licenses/MIT", "downloadUrl": "https://github.com/anilmetin0/winmouse/releases/latest", "codeRepository": "https://github.com/anilmetin0/winmouse", "sameAs": ["https://github.com/anilmetin0/winmouse"], "author": {"@type": "Person", "name": "Anıl Metin", "url": "https://github.com/anilmetin0"}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "WinMouse", "description": "A free macOS menu-bar app that gives an external mouse the Windows pointer curve, speed slider and wheel scrolling, Control + wheel zoom and back and forward side buttons.", "url": "https://anilmetin0.github.io/winmouse/", "inLanguage": "en", "image": "https://anilmetin0.github.io/winmouse/images/icon-256.png", "operatingSystem": "macOS 14 or later", "applicationCategory": "UtilitiesApplication", "softwareVersion": "0.2.0", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "license": "https://opensource.org/licenses/MIT", "downloadUrl": "https://github.com/anilmetin0/winmouse/releases/latest", "codeRepository": "https://github.com/anilmetin0/winmouse", "sameAs": ["https://github.com/anilmetin0/winmouse"], "author": {"@type": "Person", "name": "Anıl Metin", "url": "https://github.com/anilmetin0"}}</script>
   <script>try{const t=localStorage.getItem("theme");document.documentElement.dataset.theme=t==="dark"||t==="light"?t:matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}catch{}</script>
   <script>if("IntersectionObserver"in window&&!matchMedia("(prefers-reduced-motion: reduce)").matches){const r=document.documentElement;r.classList.add("rv");addEventListener("load",()=>{if(!r.dataset.revealReady)r.classList.remove("rv")})}</script>
   <script src="site.js" defer></script>
@@ -104,10 +104,28 @@
     <div class="head"><h2 id="download-h">Download</h2></div>
     <div class="dl">
       <div class="card" data-reveal>
-        <h3>WinMouse for Mac</h3>
-        <p class="sub">Version <span data-version>0.1.0</span>. macOS 14 Sonoma or later, Apple silicon and Intel.</p>
+        <h3>Homebrew</h3>
+        <p class="sub">Install with Homebrew and update from Terminal</p>
+        <div class="term"><pre id="brew" tabindex="0">brew tap anilmetin0/winmouse https://github.com/anilmetin0/winmouse
+brew trust anilmetin0/winmouse
+brew install --cask anilmetin0/winmouse/winmouse
+open -a WinMouse</pre></div>
+        <div class="copy-row"><button class="btn ghost copy" type="button" data-copy="brew" data-label="Copy commands"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg><svg class="ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span class="lbl" aria-live="polite">Copy commands</span></button></div>
+        <p class="note">Homebrew 7 and later need <code>brew trust</code>. Older versions can skip that line.</p>
+        <h4 class="update-heading">Updates</h4>
+        <p class="note">Quit WinMouse from its menu, then run:</p>
+        <div class="term"><pre id="brew-update" tabindex="0">brew update
+brew upgrade --cask winmouse
+open -a WinMouse</pre></div>
+        <div class="copy-row"><button class="btn ghost copy" type="button" data-copy="brew-update" data-label="Copy update commands"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg><svg class="ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span class="lbl" aria-live="polite">Copy update commands</span></button></div>
+        <p class="note">After the first launch is blocked, choose Open Anyway in Privacy &amp; Security, then allow Accessibility. If the wheel stops working after an update, remove WinMouse from the Accessibility list and add it again.</p>
+        <p class="note"><a data-release-notes href="https://github.com/anilmetin0/winmouse/releases/latest">Release notes</a></p>
+      </div>
+      <div class="card" data-reveal>
+        <h3>Disk image</h3>
+        <p class="sub">Version <span data-version>0.2.0</span>. macOS 14 Sonoma or later, Apple silicon and Intel.</p>
         <a class="btn" data-asset="dmg" href="https://github.com/anilmetin0/winmouse/releases/latest"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>Download for Mac</a>
-        <p class="file">The file is <code>WinMouse-<span data-version>0.1.0</span>.dmg</code>. Its SHA-256 checksum is on the same release page.</p>
+        <p class="file">The file is <code>WinMouse-<span data-version>0.2.0</span>.dmg</code>. Its SHA-256 checksum is on the same release page.</p>
         <ol class="steps">
           <li><div><b>Install</b><p>Open the downloaded file and drag WinMouse to the Applications folder.</p></div></li>
           <li><div><b>Open WinMouse the first time</b><p>The app is not notarized, so macOS refuses to open it. Go to <span class="path">System Settings → Privacy &amp; Security</span>, scroll down and click Open Anyway. macOS asks once.</p></div></li>
@@ -115,8 +133,8 @@
         </ol>
         <p class="note">A mouse icon appears in the menu bar and the settings window opens. The icon pauses and resumes WinMouse.</p>
       </div>
-      <div class="card" data-reveal>
-        <h3>Build from source</h3>
+    </div>
+    <details class="source-build"><summary>Build from source</summary>
         <p class="sub">Needs Xcode or the Xcode Command Line Tools</p>
         <div class="term"><pre id="src" tabindex="0">git clone https://github.com/anilmetin0/winmouse.git
 cd winmouse
@@ -131,8 +149,7 @@ open /Applications/WinMouse.app</pre></div>
           </button>
         </div>
         <p class="note">A local build gets a new signature every time, so macOS may forget the Accessibility permission after a rebuild. Remove WinMouse from the Accessibility list and add it again, or sign with your own certificate: <code>CODESIGN_IDENTITY="Your Certificate" ./build.sh</code></p>
-      </div>
-    </div>
+      </details>
   </div>
 </section>
 
@@ -340,8 +357,9 @@ open /Applications/WinMouse.app</pre></div>
         </div>
       </details>
       <details>
-        <summary>The wheel stopped working after an update<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></summary>
+        <summary>How do I update WinMouse?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></summary>
         <div class="ans">
+          <p>Quit WinMouse, then run <code>brew update</code> and <code>brew upgrade --cask winmouse</code>. If you installed from a DMG, download the new DMG and replace the copy in Applications.</p>
           <p>macOS ties the Accessibility permission to the app's signature, and a new build can have a different one. Remove WinMouse from the list in System Settings → Privacy &amp; Security → Accessibility and add it again.</p>
         </div>
       </details>
@@ -356,12 +374,13 @@ open /Applications/WinMouse.app</pre></div>
         <summary>How do I check the download?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></summary>
         <div class="ans">
           <p>Download the <code>.sha256</code> file from the same release into the same folder, then run this in Terminal there:</p>
-          <p><code>shasum -a 256 -c WinMouse-<span data-version>0.1.0</span>.dmg.sha256</code></p>
+          <p><code>shasum -a 256 -c WinMouse-<span data-version>0.2.0</span>.dmg.sha256</code></p>
         </div>
       </details>
       <details>
         <summary>How do I remove WinMouse?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></summary>
         <div class="ans">
+          <p>If Homebrew installed it, quit WinMouse and run <code>brew uninstall --cask winmouse</code>. Otherwise, follow these steps:</p>
           <p>Quit WinMouse from its menu, delete it from Applications and remove it from the Accessibility list in System Settings. The mouse gets its previous settings back when WinMouse quits.</p>
         </div>
       </details>

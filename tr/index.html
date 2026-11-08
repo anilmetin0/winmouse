@@ -32,7 +32,7 @@
   <link rel="apple-touch-icon" href="../images/apple-touch-icon.png">
   <link rel="preload" href="../fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="../site.css">
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "WinMouse", "description": "Harici fareye Windows imleç eğrisini, hız ayarını ve tekerlek kaydırmasını, Control + tekerlek yakınlaştırmayı ve geri, ileri giden yan tuşları getiren ücretsiz macOS menü çubuğu uygulaması.", "url": "https://anilmetin0.github.io/winmouse/tr/", "inLanguage": "tr", "image": "https://anilmetin0.github.io/winmouse/images/icon-256.png", "operatingSystem": "macOS 14 veya üstü", "applicationCategory": "UtilitiesApplication", "softwareVersion": "0.1.0", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "license": "https://opensource.org/licenses/MIT", "downloadUrl": "https://github.com/anilmetin0/winmouse/releases/latest", "codeRepository": "https://github.com/anilmetin0/winmouse", "sameAs": ["https://github.com/anilmetin0/winmouse"], "author": {"@type": "Person", "name": "Anıl Metin", "url": "https://github.com/anilmetin0"}}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "WinMouse", "description": "Harici fareye Windows imleç eğrisini, hız ayarını ve tekerlek kaydırmasını, Control + tekerlek yakınlaştırmayı ve geri, ileri giden yan tuşları getiren ücretsiz macOS menü çubuğu uygulaması.", "url": "https://anilmetin0.github.io/winmouse/tr/", "inLanguage": "tr", "image": "https://anilmetin0.github.io/winmouse/images/icon-256.png", "operatingSystem": "macOS 14 veya üstü", "applicationCategory": "UtilitiesApplication", "softwareVersion": "0.2.0", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "license": "https://opensource.org/licenses/MIT", "downloadUrl": "https://github.com/anilmetin0/winmouse/releases/latest", "codeRepository": "https://github.com/anilmetin0/winmouse", "sameAs": ["https://github.com/anilmetin0/winmouse"], "author": {"@type": "Person", "name": "Anıl Metin", "url": "https://github.com/anilmetin0"}}</script>
   <script>try{const t=localStorage.getItem("theme");document.documentElement.dataset.theme=t==="dark"||t==="light"?t:matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}catch{}</script>
   <script>if("IntersectionObserver"in window&&!matchMedia("(prefers-reduced-motion: reduce)").matches){const r=document.documentElement;r.classList.add("rv");addEventListener("load",()=>{if(!r.dataset.revealReady)r.classList.remove("rv")})}</script>
   <script src="../site.js" defer></script>
@@ -104,10 +104,28 @@
     <div class="head"><h2 id="download-h">İndir</h2></div>
     <div class="dl">
       <div class="card" data-reveal>
-        <h3>Mac için WinMouse</h3>
-        <p class="sub">Sürüm <span data-version>0.1.0</span>. macOS 14 Sonoma veya üstü, Apple silicon ve Intel.</p>
+        <h3>Homebrew</h3>
+        <p class="sub">Homebrew ile kurun; yeni sürümlere Terminal’den geçin</p>
+        <div class="term"><pre id="brew" tabindex="0">brew tap anilmetin0/winmouse https://github.com/anilmetin0/winmouse
+brew trust anilmetin0/winmouse
+brew install --cask anilmetin0/winmouse/winmouse
+open -a WinMouse</pre></div>
+        <div class="copy-row"><button class="btn ghost copy" type="button" data-copy="brew" data-label="Komutları kopyala"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg><svg class="ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span class="lbl" aria-live="polite">Komutları kopyala</span></button></div>
+        <p class="note">Homebrew 7 ve sonrasında <code>brew trust</code> gerekir. Eski sürümlerde bu satırı atlayabilirsiniz.</p>
+        <h4 class="update-heading">Güncelleme</h4>
+        <p class="note">Önce WinMouse menüsünden uygulamadan çıkın, ardından:</p>
+        <div class="term"><pre id="brew-update" tabindex="0">brew update
+brew upgrade --cask winmouse
+open -a WinMouse</pre></div>
+        <div class="copy-row"><button class="btn ghost copy" type="button" data-copy="brew-update" data-label="Güncelleme komutlarını kopyala"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg><svg class="ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span class="lbl" aria-live="polite">Güncelleme komutlarını kopyala</span></button></div>
+        <p class="note">İlk açılış için Gizlilik ve Güvenlik’ten Yine de Aç’ı seçin, ardından Erişilebilirlik izni verin. Güncellemeden sonra tekerlek çalışmazsa WinMouse’u Erişilebilirlik listesinden kaldırıp yeniden ekleyin.</p>
+        <p class="note"><a data-release-notes href="https://github.com/anilmetin0/winmouse/releases/latest">Sürüm notları</a></p>
+      </div>
+      <div class="card" data-reveal>
+        <h3>Disk imajı</h3>
+        <p class="sub">Sürüm <span data-version>0.2.0</span>. macOS 14 Sonoma veya üstü, Apple silicon ve Intel.</p>
         <a class="btn" data-asset="dmg" href="https://github.com/anilmetin0/winmouse/releases/latest"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>Mac için indir</a>
-        <p class="file">Dosyanın adı <code>WinMouse-<span data-version>0.1.0</span>.dmg</code>. SHA-256 sağlama toplamı aynı sürüm sayfasında.</p>
+        <p class="file">Dosyanın adı <code>WinMouse-<span data-version>0.2.0</span>.dmg</code>. SHA-256 sağlama toplamı aynı sürüm sayfasında.</p>
         <ol class="steps">
           <li><div><b>Kurun</b><p>İndirilen dosyayı açın ve WinMouse'u Uygulamalar klasörüne sürükleyin.</p></div></li>
           <li><div><b>WinMouse'u ilk kez açın</b><p>Uygulama Apple tarafından onaylanmadığı (notarize edilmediği) için macOS açmayı reddeder. <span class="path">Sistem Ayarları → Gizlilik ve Güvenlik</span> bölümünde aşağı kaydırıp Yine de Aç'a tıklayın. macOS bunu bir kez sorar.</p></div></li>
@@ -115,8 +133,8 @@
         </ol>
         <p class="note">Menü çubuğunda bir fare simgesi belirir ve ayarlar penceresi açılır. Simgeden WinMouse'u duraklatıp sürdürebilirsiniz.</p>
       </div>
-      <div class="card" data-reveal>
-        <h3>Kaynak koddan derleyin</h3>
+    </div>
+    <details class="source-build"><summary>Kaynak koddan derleyin</summary>
         <p class="sub">Xcode ya da Xcode Command Line Tools gerekir</p>
         <div class="term"><pre id="src" tabindex="0">git clone https://github.com/anilmetin0/winmouse.git
 cd winmouse
@@ -131,8 +149,7 @@ open /Applications/WinMouse.app</pre></div>
           </button>
         </div>
         <p class="note">Yerel derleme her seferinde yeni bir imza alır, bu yüzden macOS yeniden derlemeden sonra Erişilebilirlik iznini unutabilir. WinMouse'u Erişilebilirlik listesinden kaldırıp yeniden ekleyin ya da kendi sertifikanızla imzalayın: <code>CODESIGN_IDENTITY="Sertifikanız" ./build.sh</code></p>
-      </div>
-    </div>
+      </details>
   </div>
 </section>
 
@@ -340,8 +357,9 @@ open /Applications/WinMouse.app</pre></div>
         </div>
       </details>
       <details>
-        <summary>Güncellemeden sonra tekerlek çalışmıyor<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></summary>
+        <summary>WinMouse’u nasıl güncellerim?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></summary>
         <div class="ans">
+          <p>WinMouse’tan çıkın ve <code>brew update</code>, ardından <code>brew upgrade --cask winmouse</code> komutlarını çalıştırın. DMG’den kurduysanız yeni DMG’yi indirip Uygulamalar’daki kopyayı değiştirin.</p>
           <p>macOS Erişilebilirlik iznini uygulamanın imzasına bağlar ve yeni bir derlemenin imzası farklı olabilir. WinMouse'u Sistem Ayarları → Gizlilik ve Güvenlik → Erişilebilirlik listesinden kaldırıp yeniden ekleyin.</p>
         </div>
       </details>
@@ -356,13 +374,13 @@ open /Applications/WinMouse.app</pre></div>
         <summary>İndirdiğim dosyayı nasıl doğrularım?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></summary>
         <div class="ans">
           <p>Aynı sürümdeki <code>.sha256</code> dosyasını aynı klasöre indirin, sonra o klasörde Terminal'de şunu çalıştırın:</p>
-          <p><code>shasum -a 256 -c WinMouse-<span data-version>0.1.0</span>.dmg.sha256</code></p>
+          <p><code>shasum -a 256 -c WinMouse-<span data-version>0.2.0</span>.dmg.sha256</code></p>
         </div>
       </details>
       <details>
         <summary>WinMouse'u nasıl kaldırırım?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></summary>
         <div class="ans">
-          <p>Menüsünden WinMouse'tan çıkın, Uygulamalar klasöründen silin ve Sistem Ayarları'ndaki Erişilebilirlik listesinden kaldırın. WinMouse kapanınca fare önceki ayarlarına döner.</p>
+          <p>Menüsünden WinMouse'tan çıkın; Homebrew ile kurduysanız <code>brew uninstall --cask winmouse</code> komutunu çalıştırın, yoksa Uygulamalar klasöründen silin ve Sistem Ayarları'ndaki Erişilebilirlik listesinden kaldırın. WinMouse kapanınca fare önceki ayarlarına döner.</p>
         </div>
       </details>
     </div>

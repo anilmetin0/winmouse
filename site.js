@@ -43,7 +43,7 @@ function drawRulers() {
 drawRulers();
 addEventListener("resize", drawRulers);
 
-// Copy the build commands
+// Copy installation, update and build commands
 for (const btn of document.querySelectorAll("[data-copy]")) {
   const label = btn.querySelector(".lbl");
   btn.addEventListener("click", async () => {
@@ -63,15 +63,14 @@ for (const btn of document.querySelectorAll("[data-copy]")) {
   });
 }
 
-// Version and download of the newest release, prereleases included (/releases/latest skips
-// them). The links work without this.
-fetch(`https://api.github.com/repos/${repo}/releases?per_page=10`)
+// Homebrew and the default download follow stable releases. Static links also work offline.
+fetch(`https://api.github.com/repos/${repo}/releases/latest`)
   .then((r) => (r.ok ? r.json() : Promise.reject()))
-  .then((list) => {
-    const release = list.find((r) => !r.draft);
-    if (!release) return;
-    const dmg = release.assets.find((a) => /^WinMouse-.+\.dmg$/.test(a.name));
+  .then((release) => {
+    if (release.draft || release.prerelease) return;
+    const dmg = release.assets?.find((a) => /^WinMouse-.+\.dmg$/.test(a.name));
     for (const a of document.querySelectorAll('[data-asset="dmg"]')) a.href = dmg ? dmg.browser_download_url : release.html_url;
+    for (const a of document.querySelectorAll('[data-release-notes]')) a.href = release.html_url;
     const version = release.tag_name.replace(/^v/, "");
     for (const el of document.querySelectorAll("[data-version]")) el.textContent = version;
   })

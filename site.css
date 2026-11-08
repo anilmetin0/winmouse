@@ -433,3 +433,10 @@ footer .ruler { margin-bottom: 30px; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
   html { scroll-behavior: auto; }
 }
+
+/* Homebrew install and update commands share the existing terminal treatment. */
+.update-heading { font-size: 1.1rem; margin: 28px 0 8px; }
+.source-build { margin-top: 28px; padding-block: 18px; border-block: 1px solid var(--line); }
+.source-build > summary { cursor: pointer; font-weight: 650; }
+.source-build .term { max-width: 70ch; }
+.source-build > .note { max-width: 75ch; }
