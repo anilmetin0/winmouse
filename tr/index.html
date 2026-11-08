@@ -113,10 +113,9 @@ open -a WinMouse</pre></div>
         <div class="copy-row"><button class="btn ghost copy" type="button" data-copy="brew" data-label="Komutları kopyala"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg><svg class="ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span class="lbl" aria-live="polite">Komutları kopyala</span></button></div>
         <p class="note">Homebrew 7 ve sonrasında <code>brew trust</code> gerekir. Eski sürümlerde bu satırı atlayabilirsiniz.</p>
         <h4 class="update-heading">Güncelleme</h4>
-        <p class="note">Önce WinMouse menüsünden uygulamadan çıkın, ardından:</p>
+        <p class="note">Homebrew WinMouse’u günceller; uygulama açıksa yeniden açar:</p>
         <div class="term"><pre id="brew-update" tabindex="0">brew update
-brew upgrade --cask winmouse
-open -a WinMouse</pre></div>
+brew upgrade --cask winmouse</pre></div>
         <div class="copy-row"><button class="btn ghost copy" type="button" data-copy="brew-update" data-label="Güncelleme komutlarını kopyala"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg><svg class="ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span class="lbl" aria-live="polite">Güncelleme komutlarını kopyala</span></button></div>
         <p class="note">İlk açılış için Gizlilik ve Güvenlik’ten Yine de Aç’ı seçin, ardından Erişilebilirlik izni verin. Güncellemeden sonra tekerlek çalışmazsa WinMouse’u Erişilebilirlik listesinden kaldırıp yeniden ekleyin.</p>
         <p class="note"><a data-release-notes href="https://github.com/anilmetin0/winmouse/releases/latest">Sürüm notları</a></p>
@@ -359,7 +358,7 @@ open /Applications/WinMouse.app</pre></div>
       <details>
         <summary>WinMouse’u nasıl güncellerim?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></summary>
         <div class="ans">
-          <p>WinMouse’tan çıkın ve <code>brew update</code>, ardından <code>brew upgrade --cask winmouse</code> komutlarını çalıştırın. DMG’den kurduysanız yeni DMG’yi indirip Uygulamalar’daki kopyayı değiştirin.</p>
+          <p><code>brew update</code> ve <code>brew upgrade --cask winmouse</code> komutlarını çalıştırın. Uygulama açıksa Homebrew kapatıp yeniden açar.</p>
           <p>macOS Erişilebilirlik iznini uygulamanın imzasına bağlar ve yeni bir derlemenin imzası farklı olabilir. WinMouse'u Sistem Ayarları → Gizlilik ve Güvenlik → Erişilebilirlik listesinden kaldırıp yeniden ekleyin.</p>
         </div>
       </details>

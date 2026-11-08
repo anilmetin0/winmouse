@@ -113,10 +113,9 @@ open -a WinMouse</pre></div>
         <div class="copy-row"><button class="btn ghost copy" type="button" data-copy="brew" data-label="Copy commands"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg><svg class="ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span class="lbl" aria-live="polite">Copy commands</span></button></div>
         <p class="note">Homebrew 7 and later need <code>brew trust</code>. Older versions can skip that line.</p>
         <h4 class="update-heading">Updates</h4>
-        <p class="note">Quit WinMouse from its menu, then run:</p>
+        <p class="note">Homebrew updates WinMouse and reopens it if it was running:</p>
         <div class="term"><pre id="brew-update" tabindex="0">brew update
-brew upgrade --cask winmouse
-open -a WinMouse</pre></div>
+brew upgrade --cask winmouse</pre></div>
         <div class="copy-row"><button class="btn ghost copy" type="button" data-copy="brew-update" data-label="Copy update commands"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg><svg class="ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span class="lbl" aria-live="polite">Copy update commands</span></button></div>
         <p class="note">After the first launch is blocked, choose Open Anyway in Privacy &amp; Security, then allow Accessibility. If the wheel stops working after an update, remove WinMouse from the Accessibility list and add it again.</p>
         <p class="note"><a data-release-notes href="https://github.com/anilmetin0/winmouse/releases/latest">Release notes</a></p>
@@ -359,7 +358,7 @@ open /Applications/WinMouse.app</pre></div>
       <details>
         <summary>How do I update WinMouse?<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></summary>
         <div class="ans">
-          <p>Quit WinMouse, then run <code>brew update</code> and <code>brew upgrade --cask winmouse</code>. If you installed from a DMG, download the new DMG and replace the copy in Applications.</p>
+          <p>Run <code>brew update</code> and <code>brew upgrade --cask winmouse</code>. Homebrew handles closing and reopening a running copy.</p>
           <p>macOS ties the Accessibility permission to the app's signature, and a new build can have a different one. Remove WinMouse from the list in System Settings → Privacy &amp; Security → Accessibility and add it again.</p>
         </div>
       </details>
