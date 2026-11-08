@@ -42,9 +42,9 @@ and the date, and it becomes the release notes on GitHub.
 - The native upgrade test downloads a fixture, verifies it, calls the normal shutdown path,
   replaces the bundle, relaunches the new version and verifies its signature. It uses mock mouse
   controllers, so this is not physical-mouse acceptance.
-- Homebrew's isolated test upgraded and quit the fixture and attempted its automatic reopen.
-  Launch Services did not resolve the temporary fixture's bundle ID; production installation
-  behavior in Applications still needs user confirmation. No custom executable hooks were added.
+- The Homebrew lifecycle test upgraded a running, isolated app in the project's build directory,
+  called its normal shutdown path and reopened the new version. No custom executable hooks
+  were added to the cask.
 
 ## [0.2.0] - 2026-11-08
 

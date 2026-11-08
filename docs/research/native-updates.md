@@ -14,13 +14,12 @@ successfully quit by `uninstall quit` and reopens them after an upgrade:
 Therefore manual Quit and `open -a WinMouse` instructions do not belong in the upgrade commands.
 `brew update` refreshes tap metadata; `brew upgrade --cask winmouse` replaces the app.
 
-The first isolated lifecycle attempt reported a quit failure and suggested Automation access;
-that diagnostic alone does not establish its cause. A subsequent running fixture quit normally
-through Homebrew. The cask retains the standard `uninstall quit` directive and relies on
-Homebrew's own reopen behavior. No custom preflight/postflight executable is used: a separate
-experiment with a staged executable was rejected by the OS and was removed from the cask.
-The app's native Homebrew route quits itself normally before the external upgrade, then its
-helper reopens it, without requiring another process to terminate the input engine.
+The cask uses the standard `uninstall quit` directive and Homebrew's own reopen behavior.
+The initial /tmp fixture was not discoverable by Launch Services for `open -b`. Repeating the
+test with a complete app fixture installed under the project's build directory passed: Homebrew
+quit 0.6.0 normally, upgraded it and reopened 0.7.0. The app trace recorded stop/restore before
+the new launch. The native Homebrew route quits itself normally before the external upgrade,
+then its helper reopens the app by its explicit path. No custom cask executable hooks are used.
 
 ## Native delivery contract
 

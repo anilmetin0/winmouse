@@ -85,5 +85,7 @@ including Try Again, in English and Turkish. Verify the app icon appears and tex
 
 For Homebrew, verify an installed, running copy closes and reopens with
 `brew update && brew upgrade --cask winmouse`. A stopped copy should remain stopped. The isolated
-/tmp fixture verified the upgrade and quit/reopen scheduling; Launch Services did not resolve its
-temporary bundle ID. Confirm the final reopen on a normal Applications installation.
+/tmp fixture could not be reopened by bundle ID. A subsequent fixture installed under this
+project's build directory passed the full Homebrew lifecycle: launch 0.6.0 → stop/restore 0.6.0
+→ launch 0.7.0. Both used separate bundle IDs and mock mouse controllers; neither touched a
+real WinMouse install or its HID settings.
