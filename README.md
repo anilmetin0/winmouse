@@ -86,13 +86,14 @@ WinMouse is not notarized: after the first launch is blocked, allow it in
 **System Settings > Privacy & Security > Open Anyway**. Then allow Accessibility access for
 the wheel and side buttons.
 
-Quit WinMouse before updating:
+To update:
 
 ```sh
 brew update
 brew upgrade --cask winmouse
-open -a WinMouse
 ```
+
+Homebrew closes and reopens a running copy automatically.
 
 If scrolling or side buttons stop working after an update, remove WinMouse from the Accessibility
 list and add `/Applications/WinMouse.app` again. Homebrew manages updates; WinMouse does not
@@ -178,8 +179,8 @@ Homebrew ile kurmak için yukarıdaki **Homebrew** bölümündeki komutları kul
 İlk açılış engellenirse **Sistem Ayarları > Gizlilik ve Güvenlik > Yine de Aç** yolundan izin
 verin, ardından Erişilebilirlik iznini açın.
 
-Güncellemeden önce WinMouse'tan çıkın; `brew update` ve `brew upgrade --cask winmouse` komutlarını
-çalıştırıp uygulamayı yeniden açın. Güncellemeden sonra tekerlek veya yan tuşlar çalışmazsa
+`brew update` ve `brew upgrade --cask winmouse` komutlarını çalıştırın. Homebrew, uygulama
+açıksa kapatıp yeniden açar. Güncellemeden sonra tekerlek veya yan tuşlar çalışmazsa
 WinMouse'u Erişilebilirlik listesinden kaldırıp `/Applications/WinMouse.app` dosyasını yeniden
 ekleyin. Güncellemeleri Homebrew yönetir; uygulama arka planda güncelleme aramaz.
 
