@@ -24,7 +24,7 @@ browser's scroll-sequence contract:
 
 - [Chromium source at 8f8a5de4](https://github.com/chromium/chromium/blob/8f8a5de4fa8280aa457ccebd06c99ba9c2d8ff5e/content/browser/renderer_host/input/mouse_wheel_phase_handler.cc)
 - [Apple NSEvent.phase](https://developer.apple.com/documentation/appkit/nsevent/phase)
-- Local CG-to-AppKit phase mapping and SDK values: [macos-hid.md §5.2](macos-hid.md#52-appkit)
+- Local CG-to-AppKit phase mapping and SDK values: [macos-hid.md §5.2](macos-hid.md)
 
 ## Delivery contract
 
