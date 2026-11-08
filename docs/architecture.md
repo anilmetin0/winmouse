@@ -21,12 +21,18 @@ presses and releases, on its own thread. For the wheel it leaves continuous even
 phases, synthetic events without a sender, game-category apps, and Command/Option gestures alone.
 Control + wheel becomes Command-= or Command-- per notch unless macOS Zoom uses that gesture. The
 remaining discrete notches become configured distances, animated with `ScrollAnimation.swift` and
-posted as pixel scroll events. `WheelEvents.swift` holds the event-field helpers.
+posted as pixel scroll events. Supported browsers get Begin/Changed/End scroll phases for one
+animation; native apps retain phase-free output. No momentum or companion gesture events are
+generated. The original notch's position and available target PID are kept through the animation.
+App switches, setting changes and native scrolling cancel a pending wheel tail.
+`WheelEvents.swift` holds the event-field helpers and tested scroll-sequence builder.
 
 For buttons 3 and 4, `Buttons.swift` decides per frontmost app: pass the button through (apps that
 handle it, and every unknown app), or hold the press back and post the app's Back/Forward shortcut
 on release. The tap requires Accessibility access. A five-second health check runs only while the
 tap is active; the animation driver pauses while idle.
+Missing Accessibility access is retried when the app becomes active or its menu opens, without
+an additional permission-polling timer.
 
 `WindowsPointer.swift` builds the pointer curve and Apple-format HID table. `ScrollAnimation.swift`
 contains the wheel distance and easing model, and `Buttons.swift` the per-app button mapping. Their pure calculations are covered by the self-test

@@ -301,6 +301,12 @@ Other code referenced above:
 
 **The unoccupied spot:** (a) a per-device Windows EPP curve (Windows 7 or 8+ constants, sensitivity 1-20, sub-pixel remainders) on top of a linear macOS baseline that is re-applied after every reset; (b) a wheel with a fixed distance per notch, no macOS wheel acceleration, and at most a short per-notch ease with no momentum, no scroll phases and no gesture events, so no rubber band or swipe navigation; (c) restore-on-crash and wake handling from day one.
 
+2026-11-08 implementation update: browser snapping needs an explicit Begin/Changed/End sequence
+for the animation's frames. Only recognized browsers receive those phases; native applications
+retain phase-free pixel output. No momentum or companion gesture events are generated. See
+[scroll-compatibility.md](scroll-compatibility.md) for the evidence, regression checks and
+unverified hardware behavior. This supersedes the blanket "no scroll phases" recommendation.
+
 ---
 
 ## Sources

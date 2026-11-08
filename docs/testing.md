@@ -13,6 +13,10 @@ The first command checks pointer and scroll math against the vectors in `docs/re
 also builds a universal `build/WinMouse.app` for `arm64` and `x86_64`. These checks do not exercise
 IOKit writes, Accessibility, event routing, or a real mouse.
 
+The scroll tests also check the event builder's Begin/Changed/End and Cancelled phases through
+AppKit at 60, 120 and 144 Hz, including distance conservation and phase-free output for native
+apps. Release-tooling tests run separately with `python3 scripts/test-update-cask.py`.
+
 ## Hardware acceptance
 
 Before testing, quit LinearMouse, Mac Mouse Fix, Mos, and any other utility that changes mouse HID
@@ -37,6 +41,12 @@ log stream --style compact --level debug --predicate 'subsystem == "io.github.an
 Check that the log reports the expected raw deltas and sender ID, that wheel motion follows the
 selected direction and line count, and that continuous trackpad/Magic Mouse scrolling stays native.
 Also check Shift-wheel, modifier gestures, a game-category app, and natural scrolling.
+
+In YouTube Shorts and Facebook Reels, try one notch, a fast burst, a reverse notch and a pause
+between notches, with smooth scrolling on and off. One notch must not skip multiple videos.
+Move the pointer to another window during an animation, switch apps, disable scrolling while
+side buttons remain enabled, and scroll the trackpad during a wheel tail. The old animation
+must stop or remain at its original target. Check browser edges for rubber-banding as well.
 
 Buttons and zoom:
 

@@ -56,12 +56,15 @@ final class PointerController {
 
     func restoreAll() {
         series += 1  // pending passes would put the curve back
+        var remaining = driven
         if let lookup = serviceLookup() {
             for (id, entry) in driven {
-                if let service = lookup(id) { restore(service, entry.originals) }
+                if let service = lookup(id) {
+                    if restore(service, entry.originals) { remaining[id] = nil }
+                } else { remaining[id] = nil }  // a disconnected service no longer has overrides
             }
         }
-        driven = [:]
+        driven = remaining
         publish()
     }
 
@@ -91,10 +94,10 @@ final class PointerController {
             guard let service = lookup(id) else { continue }  // hidd hasn't built it yet
             var entry = driven[id]
             if entry == nil, let leftover = Originals(leftOn: service) {
-                restore(service, leftover)
+                guard restore(service, leftover) else { continue }
             }
             guard wanted else {
-                if let entry { restore(service, entry.originals) }
+                if let entry, !restore(service, entry.originals) { next[id] = entry }
                 continue
             }
             if entry == nil, isExternalMouse(service) {
@@ -104,7 +107,7 @@ final class PointerController {
                 if drive(service, entry.originals) {
                     next[id] = entry
                 } else {
-                    log.error("\(entry.name, privacy: .public): hidd refused the curve, left as it was")
+                    log.error("\(entry.name, privacy: .public): hidd refused the Windows curve")
                 }
             }
         }
@@ -144,11 +147,15 @@ final class PointerController {
     /// Puts back what `drive` changed (macos-hid.md §3). A key can't be removed from a service, so a
     /// missing table comes back as Apple's built-in one and a missing algorithm as 2 (default), which
     /// the filter treats like absent ones. Our index key stays behind, read by nothing.
-    private func restore(_ service: IOHIDServiceClient, _ originals: Originals) {
-        _ = set(service, tableKey, (originals.table ?? appleDefaultTable) as CFData)
-        _ = set(service, typeKey, mouseType as CFString)
-        _ = set(service, algorithmKey, NSNumber(value: originals.algorithm ?? 2))  // last: rebuilds the curve
-        _ = set(service, backupKey, NSDictionary())  // not ours any more
+    @discardableResult private func restore(_ service: IOHIDServiceClient, _ originals: Originals) -> Bool {
+        guard set(service, tableKey, (originals.table ?? appleDefaultTable) as CFData),
+              set(service, typeKey, mouseType as CFString),
+              set(service, algorithmKey, NSNumber(value: originals.algorithm ?? 2)) else {
+            log.error("Could not restore the mouse's HID properties; keeping the recovery backup")
+            return false
+        }
+        // A partial restoration must never erase the only copy of the mouse's old values.
+        return set(service, backupKey, NSDictionary())
     }
 
     private func publish() {

@@ -9,6 +9,42 @@ and the date, and it becomes the release notes on GitHub.
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-11-08
+
+### Added
+
+- Install with Homebrew using the tap in this repository. Run `brew update` and
+  `brew upgrade --cask winmouse` to update. The release workflow pins each stable release's
+  cask version and SHA-256 after publishing the disk image.
+- Regression checks for browser scroll phases, both scroll directions at 60/120/144 Hz,
+  horizontal cancellation and the Homebrew cask updater.
+
+### Fixed
+
+- Smooth wheel frames in supported browsers now share one Begin/Changed/End sequence. This
+  addresses the repeated video jumps reported on YouTube Shorts and Facebook Reels in
+  [#3](https://github.com/anilmetin0/winmouse/issues/3). The Windows curve, distance and timing
+  are unchanged; confirmation with the reporter's mouse is still needed.
+- An animation keeps its original pointer location and target process when available, and
+  stops on app switches, setting changes, native trackpad input and modifier gestures.
+- Releasing a side button after switching apps no longer sends navigation to the new app.
+- A failed HID restoration keeps the mouse's recovery backup instead of discarding it.
+- Granting Accessibility is detected when returning to WinMouse or opening its menu, without
+  a background permission-polling timer.
+
+### Changed
+
+- Updated and pinned the build and artifact actions to their current release commits.
+- The English and Turkish installation instructions cover Homebrew updates and refreshing
+  Accessibility access after an update.
+
+### Validation
+
+- Reference and event-construction tests cover the calculations and CGEvent-to-AppKit phase
+  mapping. Physical mouse acceptance on Shorts/Reels, HID write failures, and mixed-refresh
+  displays has not been completed. Please report the mouse model, browser and macOS version
+  if video skipping continues.
+
 ## [0.1.0] - 2026-10-31
 
 First public release.
@@ -35,5 +71,6 @@ First public release.
 - A universal build for Apple Silicon and Intel, distributed as a disk image with a SHA-256
   checksum.
 
-[Unreleased]: https://github.com/anilmetin0/winmouse/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/anilmetin0/winmouse/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/anilmetin0/winmouse/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/anilmetin0/winmouse/releases/tag/v0.1.0

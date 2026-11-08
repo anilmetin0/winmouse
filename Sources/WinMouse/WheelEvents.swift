@@ -66,3 +66,41 @@ struct WheelAxis {
         return Int32(max(min(step, 1e6), -1e6))  // a frame never moves this far; just no trap
     }
 }
+
+/// Browser frames need an explicit scroll sequence for snapping feeds. Native apps keep
+/// phase-free pixels to avoid their trackpad rubber-banding (scroll-compatibility.md).
+func groupsWheelFrames(in bundleID: String?) -> Bool {
+    guard let bundleID else { return false }
+    return ["com.apple.Safari", "com.apple.SafariTechnologyPreview", "com.google.Chrome",
+            "com.google.Chrome.beta", "com.google.Chrome.canary", "org.chromium.Chromium",
+            "com.microsoft.edgemac", "com.microsoft.edgemac.Beta", "com.microsoft.edgemac.Dev",
+            "org.mozilla.firefox", "org.mozilla.firefoxdeveloperedition", "org.mozilla.nightly",
+            "com.brave.Browser", "com.vivaldi.Vivaldi", "com.operasoftware.Opera",
+            "company.thebrowser.Browser"].contains(bundleID)
+}
+
+/// The event construction used by the tap and tested through AppKit. CG scroll phases
+/// are 1/2/4/8, distinct from NSEventPhase's bits (macos-hid.md §5.2).
+struct WheelSequence {
+    private(set) var active = false
+
+    mutating func event(dy: Int32, dx: Int32, grouped: Bool) -> CGEvent? {
+        guard dy != 0 || dx != 0,
+              let event = CGEvent(scrollWheelEvent2Source: nil, units: .pixel, wheelCount: 2,
+                                  wheel1: dy, wheel2: dx, wheel3: 0) else { return nil }
+        if grouped {
+            event.setIntegerValueField(.scrollWheelEventScrollPhase, value: active ? 2 : 1)
+            active = true
+        }
+        return event
+    }
+
+    mutating func end(cancelled: Bool = false) -> CGEvent? {
+        guard active else { return nil }
+        active = false
+        let event = CGEvent(scrollWheelEvent2Source: nil, units: .pixel, wheelCount: 2,
+                            wheel1: 0, wheel2: 0, wheel3: 0)
+        event?.setIntegerValueField(.scrollWheelEventScrollPhase, value: cancelled ? 8 : 4)
+        return event
+    }
+}

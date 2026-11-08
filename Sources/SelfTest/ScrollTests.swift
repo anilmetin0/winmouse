@@ -4,6 +4,7 @@ import AppKit
 // Chromium vectors A-D (§6), which the appendix's Python model reproduces as well.
 
 func scrollTests() {
+    wheelSequenceTests()
     check(inverseDeltaDuration(100) == 0.2, "Tinv(100) = \(inverseDeltaDuration(100)) s, want 0.2")
     check(abs(inverseDeltaDuration(480) - 0.1) < 1e-12, "Tinv(480) = \(inverseDeltaDuration(480)) s, want 0.1")
     // Lines and characters share the factor, so this is also 3 characters per tilt.
@@ -52,4 +53,46 @@ func scrollTests() {
         // A posted event has no sender, so the tap leaves it alone and never sees its own output.
         check(!isDeviceNotch(event), "a posted event counts as a device notch")
     }
+}
+
+private func wheelSequenceTests() {
+    for hz in [60, 120, 144] {
+        for direction in [-1.0, 1.0] {
+            var axis = WheelAxis(), sequence = WheelSequence()
+            var events: [CGEvent] = []
+            axis.animation.notch(at: 0, distance: direction * notchDistance(3))
+            check(sequence.event(dy: 0, dx: 0, grouped: true) == nil && !sequence.active,
+                  "a rounded zero frame must not begin a gesture")
+            for frame in 1...hz {
+                let delta = axis.step(at: Double(frame) / Double(hz))
+                if let event = sequence.event(dy: delta, dx: 0, grouped: true) { events.append(event) }
+            }
+            if let end = sequence.end() { events.append(end) }
+            let phases = events.map { $0.getIntegerValueField(.scrollWheelEventScrollPhase) }
+            check(phases.first == 1 && phases.last == 4 && phases.dropFirst().dropLast().allSatisfy { $0 == 2 },
+                  "\(hz) Hz: one Begin/Changed/End sequence per animation, got \(phases)")
+            check(events.reduce(Int64(0)) { $0 + $1.getIntegerValueField(.scrollWheelEventPointDeltaAxis1) } == Int64(direction * 100),
+                  "\(hz) Hz: phase framing must preserve exactly 100 points")
+            check(events.allSatisfy { $0.getIntegerValueField(.scrollWheelEventMomentumPhase) == 0 && !isDeviceNotch($0) },
+                  "no synthetic momentum and no feedback into the wheel tap")
+            check(events.first.flatMap { NSEvent(cgEvent: $0) }?.phase == .began
+                  && events.last.flatMap { NSEvent(cgEvent: $0) }?.phase == .ended,
+                  "CG phases must reach AppKit as Begin and End")
+            check(sequence.end() == nil && !sequence.active, "no duplicate End while idle")
+        }
+    }
+    var sequence = WheelSequence()
+    _ = sequence.event(dy: 0, dx: 7, grouped: true)
+    let cancelled = sequence.end(cancelled: true)
+    check(cancelled.flatMap { NSEvent(cgEvent: $0) }?.phase == .cancelled && !sequence.active,
+          "interrupting a horizontal gesture must send Cancelled")
+    let next = sequence.event(dy: -10, dx: 0, grouped: true)
+    check(next?.getIntegerValueField(.scrollWheelEventScrollPhase) == 1, "the next gesture starts fresh")
+    _ = sequence.end()
+    let native = sequence.event(dy: 100, dx: 0, grouped: false)
+    check(native?.getIntegerValueField(.scrollWheelEventScrollPhase) == 0 && sequence.end() == nil,
+          "native apps and unsmoothed scrolling retain phase-free output")
+    check(groupsWheelFrames(in: "com.google.Chrome") && groupsWheelFrames(in: "com.apple.Safari")
+          && groupsWheelFrames(in: "org.mozilla.firefox") && !groupsWheelFrames(in: "com.apple.finder")
+          && !groupsWheelFrames(in: nil), "only browsers opt into explicit wheel phases")
 }

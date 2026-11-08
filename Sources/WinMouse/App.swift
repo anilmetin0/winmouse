@@ -29,7 +29,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private var statusItem: NSStatusItem?
     private var settingsWindow: NSWindow?
     private var applied: Settings?
-    private var permissionPoll: Timer?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         Settings.registerDefaults()
@@ -90,30 +89,22 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         let tapping = tap.apply(settings)
         state.needsAccessibility = settings.needsTap && !tapping
         statusItem?.button?.appearsDisabled = !settings.enabled
-        watchForPermission(state.needsAccessibility)
     }
 
-    /// Accessibility has no change notification, so it is polled, and only while it is missing.
-    /// A poll only retries the event tap; the pointer side needs no permission.
-    private func watchForPermission(_ needed: Bool) {
-        guard needed else {
-            permissionPoll?.invalidate()
-            permissionPoll = nil
-            return
-        }
-        guard permissionPoll == nil else { return }
-        permissionPoll = Timer.scheduledTimer(withTimeInterval: 2, repeats: true) { [weak self] _ in
-            MainActor.assumeIsolated {
-                guard let self, AXIsProcessTrusted() else { return }
-                self.state.needsAccessibility = !self.tap.apply(Settings.load())
-                self.watchForPermission(self.state.needsAccessibility)
-            }
-        }
+    /// Retry when the user returns from System Settings, without an idle permission timer.
+    func applicationDidBecomeActive(_ notification: Notification) {
+        retryPermission()
+    }
+
+    private func retryPermission() {
+        guard state.needsAccessibility, AXIsProcessTrusted() else { return }
+        state.needsAccessibility = Settings.load().needsTap && !tap.apply(Settings.load())
     }
 
     // MARK: Menu
 
     func menuNeedsUpdate(_ menu: NSMenu) {
+        retryPermission()
         menu.removeAllItems()
         let enabled = Settings.load().enabled
 

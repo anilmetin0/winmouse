@@ -40,7 +40,8 @@ nothing while the mouse moves and needs no permission. Turn precision off and yo
 linear speeds.
 
 **Windows wheel scrolling.** Every notch moves the same distance: 3 lines, with the short
-ease-in-out of Chrome and Edge on Windows. There is no acceleration, no momentum and no bounce.
+ease-in-out of Chrome and Edge on Windows. WinMouse adds no acceleration or momentum.
+In supported browsers, the animation frames form one scroll gesture for snapping video feeds.
 Shift + wheel scrolls sideways, and the tilt wheel scrolls by characters.
 
 **Ctrl + wheel zoom.** Control with the wheel zooms in browsers and other apps, one step per
@@ -70,6 +71,34 @@ counterpart. The app is in English and Turkish.
 | Side buttons go back and forward | Back and forward buttons | On |
 
 ## Install
+
+### Homebrew
+
+```sh
+brew tap anilmetin0/winmouse https://github.com/anilmetin0/winmouse
+brew trust anilmetin0/winmouse
+brew install --cask anilmetin0/winmouse/winmouse
+open -a WinMouse
+```
+
+`brew trust` is needed by Homebrew 7 and later. Older Homebrew versions can skip that line.
+WinMouse is not notarized: after the first launch is blocked, allow it in
+**System Settings > Privacy & Security > Open Anyway**. Then allow Accessibility access for
+the wheel and side buttons.
+
+Quit WinMouse before updating:
+
+```sh
+brew update
+brew upgrade --cask winmouse
+open -a WinMouse
+```
+
+If scrolling or side buttons stop working after an update, remove WinMouse from the Accessibility
+list and add `/Applications/WinMouse.app` again. Homebrew manages updates; WinMouse does not
+check the network or install updates itself.
+
+### Disk image
 
 1. Download `WinMouse-<version>.dmg` from the
    [latest release](https://github.com/anilmetin0/winmouse/releases/latest).
@@ -131,7 +160,8 @@ curve segments the way Windows does for one report. The [research notes](docs/re
 details.
 
 **How do I uninstall it?**
-Quit WinMouse from its menu, move it from Applications to the Trash and remove it from the
+Quit WinMouse from its menu, run `brew uninstall --cask winmouse` if Homebrew installed it,
+or move it from Applications to the Trash. Remove it from the
 Accessibility list in System Settings.
 
 ## Türkçe
@@ -142,6 +172,16 @@ artır" ve imleç hızı), tekerlek kaydırmasını, Ctrl + tekerlek yakınlaşt
 tuşlarını getirir. İzleme dörtgenine dokunmaz. Uygulama Türkçedir;
 [son sürümü](https://github.com/anilmetin0/winmouse/releases/latest) indirip yukarıdaki kurulum
 adımlarını izleyin.
+
+Homebrew ile kurmak için yukarıdaki **Homebrew** bölümündeki komutları kullanabilirsiniz.
+`brew trust` satırı Homebrew 7 ve sonrasında gerekir; eski sürümlerde atlanabilir.
+İlk açılış engellenirse **Sistem Ayarları > Gizlilik ve Güvenlik > Yine de Aç** yolundan izin
+verin, ardından Erişilebilirlik iznini açın.
+
+Güncellemeden önce WinMouse'tan çıkın; `brew update` ve `brew upgrade --cask winmouse` komutlarını
+çalıştırıp uygulamayı yeniden açın. Güncellemeden sonra tekerlek veya yan tuşlar çalışmazsa
+WinMouse'u Erişilebilirlik listesinden kaldırıp `/Applications/WinMouse.app` dosyasını yeniden
+ekleyin. Güncellemeleri Homebrew yönetir; uygulama arka planda güncelleme aramaz.
 
 ## Contributing
 
