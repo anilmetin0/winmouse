@@ -30,6 +30,15 @@ app=app.replace('Settings.registerDefaults()', '''URLProtocol.registerClass(Upda
 app=app.replace('"launchedBefore": true]', '"launchedBefore": true, "automaticUpdates": '+('true' if automatic else 'false')+']')
 if automatic:
  app=app.replace('if Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String == "0.2.0" {','if false {')
+ app=app.replace('Settings.registerDefaults()', '''if Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String == "0.2.0" {
+            Task {
+                while !self.updater.hasPreparedUpdate { try? await Task.sleep(for: .milliseconds(50)) }
+                fixtureRecord("deferred")
+                self.tap.canRestartForUpdate = true
+                self.tap.onInputIdle?()
+            }
+        }
+        Settings.registerDefaults()''',1)
 (root/'App.swift').write_text(app)
 (root/'Fixture.swift').write_text('''import AppKit
 import Foundation
@@ -46,7 +55,7 @@ func fixtureRecord(_ event:String) {
 }
 @MainActor final class MouseTap {
  var onPermissionLost:(@MainActor ()->Void)?; var onInputIdle:(@MainActor ()->Void)?
- var canRestartForUpdate:Bool { true }
+ var canRestartForUpdate = true
  func apply(_ settings:Settings)->Bool { true }
  func stop() { fixtureRecord("stop") }
 }
@@ -63,6 +72,8 @@ final class UpdateFixtureProtocol: URLProtocol,@unchecked Sendable {
  override func stopLoading() {}
 }
 ''')
+if automatic:
+ p=root/'Fixture.swift';p.write_text(p.read_text().replace('var canRestartForUpdate = true','var canRestartForUpdate = false'))
 for name in ['App.swift','Fixture.swift']:
  p=root/name;p.write_text(p.read_text().replace('__WINMOUSE_FIXTURE_ROOT__',str(root)))
 cache=str(repo/'build/ModuleCache')
@@ -94,7 +105,7 @@ while time.monotonic()<deadline:
  time.sleep(0.2)
 else: raise RuntimeError(f'Update timed out; inspect {root}')
 expected=['launch 0.2.0','available 0.2.0','stop 0.2.0','restore 0.2.0','launch 0.3.0','stop 0.3.0','restore 0.3.0']
-if automatic: expected.remove('available 0.2.0')
+if automatic: expected[1]='deferred 0.2.0'
 assert log.splitlines()==expected,log
 installed=root/'0.2.0/WinMouse.app'
 assert plistlib.loads((installed/'Contents/Info.plist').read_bytes())['CFBundleShortVersionString']=='0.3.0'
