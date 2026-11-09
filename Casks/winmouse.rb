@@ -1,6 +1,6 @@
 cask "winmouse" do
-  version "0.3.0"
-  sha256 "20061f233e0455a972fcd243534ec4f5b5448091ad885f7e553ab1dd649ab3fc"
+  version "0.3.1"
+  sha256 "ee009693fb47b6e3d083e72ac04f4e1d5c22fa010a7ef451a1eacfb6da213268"
 
   url "https://github.com/anilmetin0/winmouse/releases/download/v#{version}/WinMouse-#{version}.dmg"
   name "WinMouse"
