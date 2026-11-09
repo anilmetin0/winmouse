@@ -50,3 +50,40 @@ app or mixing with a trackpad. Synthetic output has no HID sender and is never t
 cancellation, phase-free native output and duplicate-End suppression. The reference curve and
 its constants are unchanged. Physical mouse acceptance on Shorts/Reels, Safari boundary behavior
 and mixed-refresh displays remain release follow-up checks; do not claim those passed.
+
+## Lost scrolling after restart
+
+2026-11-09: the reporter confirmed the feed-skipping change works with a TUF Gaming M3 connected
+through a hub, Firefox, a 120 Hz display and macOS Sequoia 15.8.2. They then reported no wheel
+scrolling after restarting their Mac, with pointer movement and the middle button still working
+([follow-up](https://github.com/anilmetin0/winmouse/issues/3#issuecomment-6731821037)).
+
+`python3 scripts/test-scroll-routing.py` reproduces a delivery failure with the production
+`MouseTap.wheel` → `post` → `deliver` path on macOS 27.2 (26B123). The fixture creates a fresh
+AppKit scroll view, supplies a discrete notch and a valid target PID, and measures the view's
+actual scroll offset. It creates no HID tap and writes no device properties. Smooth scrolling
+is off to isolate event delivery from display callbacks.
+
+| Delivery | View displacement for one downward notch |
+| --- | --- |
+| 0.3.0, new pixel event sent with `postToPid` | 0 pt |
+| Control, same pixel distance sent at `cgSessionEventTap` | 100 pt |
+| Fixed `MouseTap`, sent at `cgSessionEventTap` | 100 pt |
+| Fixed `MouseTap`, original target window is no longer key | 100 pt |
+
+The pre-fix failure repeated in two fresh launches with `CGPreflightPostEventAccess() == true`.
+The control rules out a missing posting permission; disabling smoothing rules out the frame clock
+for this reproduction. This establishes a real lost-scroll path, without establishing that a
+reboot itself causes it or that this is the only failure on the reporter's Sequoia installation.
+
+Apple's SDK `CGEvent.h` documents that `CGEventPostToPid` inserts events immediately before the
+target process's taps; session posting enters the normal session event stream. The generated
+pixel event has not been annotated with a receiving window. Passing it through the session lets
+WindowServer route it before AppKit delivery. See also
+[CGEventTapLocation](https://developer.apple.com/documentation/coregraphics/cgeventtaplocation),
+which distinguishes the session and annotated-session stages.
+
+All output, including End/Cancelled, now uses session posting at the first notch's saved location.
+The saved PID still identifies the browser and detects target changes; it is not a posting route.
+Browser phases, distance, timing, cancellation and the event-tap mask are unchanged. This adds no
+timer or polling. Hardware restart acceptance on Sequoia 15.8.2 remains pending.

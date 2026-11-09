@@ -23,7 +23,9 @@ Control + wheel becomes Command-= or Command-- per notch unless macOS Zoom uses 
 remaining discrete notches become configured distances, animated with `ScrollAnimation.swift` and
 posted as pixel scroll events. Supported browsers get Begin/Changed/End scroll phases for one
 animation; native apps retain phase-free output. No momentum or companion gesture events are
-generated. The original notch's position and available target PID are kept through the animation.
+generated. Output enters the session event stream at the original notch's saved position, so
+WindowServer annotates its receiving window. The saved target PID identifies the browser and
+detects target changes; generated pixel events are not posted directly to a process.
 App switches, setting changes and native scrolling cancel a pending wheel tail.
 `WheelEvents.swift` holds the event-field helpers and tested scroll-sequence builder.
 

@@ -9,6 +9,22 @@ and the date, and it becomes the release notes on GitHub.
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-11-09
+
+### Fixed
+
+- Fixed a scroll-delivery failure related to the loss of wheel scrolling reported after a Mac
+  restart in [#3](https://github.com/anilmetin0/winmouse/issues/3#issuecomment-6731821037).
+  Generated scroll events now pass through macOS window routing at the original notch location.
+  The browser scroll grouping that fixed skipped videos is unchanged.
+
+### Validation
+
+- A native AppKit regression test reproduced zero scrolling through the old delivery route and
+  verifies the full 100-point notch through the fixed route, including an inactive target window.
+  Reference and browser phase tests pass at 60, 120 and 144 Hz. Restart acceptance with the
+  reporter's TUF Gaming M3, Firefox and Sequoia 15.8.2 is still pending.
+
 ## [0.3.0] - 2026-11-08
 
 ### Added
@@ -109,7 +125,8 @@ First public release.
 - A universal build for Apple Silicon and Intel, distributed as a disk image with a SHA-256
   checksum.
 
-[Unreleased]: https://github.com/anilmetin0/winmouse/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/anilmetin0/winmouse/compare/v0.3.1...HEAD
+[0.3.1]: https://github.com/anilmetin0/winmouse/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/anilmetin0/winmouse/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/anilmetin0/winmouse/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/anilmetin0/winmouse/releases/tag/v0.1.0

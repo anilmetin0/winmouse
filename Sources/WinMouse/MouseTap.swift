@@ -320,8 +320,10 @@ final class MouseTap: NSObject, @unchecked Sendable {
     private func deliver(_ event: CGEvent) {
         event.flags = flags
         event.location = scrollLocation
-        if let pid = scrollPID { event.postToPid(pid) }
-        else { event.post(tap: .cgSessionEventTap) }
+        // New pixel events have no window annotation. Posting straight to a PID bypasses
+        // WindowServer's routing and can silently drop scrolling in a fresh app/window (#3).
+        // The frozen notch location keeps the tail in place while the session annotates it.
+        event.post(tap: .cgSessionEventTap)
     }
 
     /// Don't let a setting change, another app or native trackpad input inherit a wheel tail.

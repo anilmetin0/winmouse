@@ -17,6 +17,20 @@ The scroll tests also check the event builder's Begin/Changed/End and Cancelled 
 AppKit at 60, 120 and 144 Hz, including distance conservation and phase-free output for native
 apps. Release-tooling tests run separately with `python3 scripts/test-update-cask.py`.
 
+## Native scroll delivery regression
+
+Run `python3 scripts/test-scroll-routing.py` in a logged-in graphical session from a terminal
+that already has Accessibility access. It compiles the production `MouseTap` with a fixture
+entry point, opens two temporary AppKit windows, and checks the actual scroll offset for a
+fresh window and a window that is no longer key. Each notch must move the intended view by
+100 points, matching a session-posted control. No HID tap, device writes or TCC changes occur.
+
+The executable runs as a child of the invoking terminal to inherit its posting permission.
+Launching its unique test bundle through LaunchServices instead gives it no posting access.
+The fixture exits normally; its source, executable and result JSON remain in the printed temporary
+directory. This test failed with 0 points through 0.3.0's direct-to-PID route and passed with 100
+points through the fixed route on macOS 27.2. It does not replace a physical reboot/wheel check.
+
 ## Hardware acceptance
 
 Before testing, quit LinearMouse, Mac Mouse Fix, Mos, and any other utility that changes mouse HID
@@ -62,6 +76,9 @@ Finally verify restoration:
 2. Reconnect the mouse and confirm it uses the baseline behavior.
 3. Restart WinMouse after forcing a quit, then quit normally and check recovery.
 4. Confirm the built-in trackpad's behavior never changed.
+5. With Open at Login enabled, restart the Mac and test the first wheel notch in Firefox and a
+   native app. Repeat after opening a fresh window and after sleep/wake. Check with smooth
+   scrolling both on and off, including a hub-connected mouse and a 120 Hz display when available.
 
 Do not describe hardware behavior as verified until these checks have been run on the target Mac and
 mouse. Record the macOS version, mouse model/connection, observed result, and any failures with the
