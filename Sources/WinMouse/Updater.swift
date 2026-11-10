@@ -63,7 +63,6 @@ final class Updater: ObservableObject {
     func check(automatic: Bool = false) {
         guard !busy else { return }
         automaticOperation = automatic
-        UserDefaults.standard.set(Date(), forKey: lastCheckKey)
         phase = .checking
         task = Task {
             var automaticRelease: UpdateManifest?
@@ -84,6 +83,9 @@ final class Updater: ObservableObject {
                 try release.validate()
                 guard let installed = ReleaseVersion(Self.currentVersion), let latest = ReleaseVersion(release.version)
                 else { throw UpdateFailure.invalidRelease }
+                // Only an answer counts as today's check: offline at launch, or the moment between
+                // a release and its update.json, is asked again at the next launch, wake or menu.
+                UserDefaults.standard.set(Date(), forKey: lastCheckKey)
                 phase = latest > installed ? .available(release) : .current
                 if automatic, latest > installed,
                    UserDefaults.standard.string(forKey: attemptedKey) != release.version {

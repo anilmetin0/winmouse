@@ -25,6 +25,7 @@ then its helper reopens the app by its explicit path. No custom cask executable 
 
 Updates are enabled by default, with one Settings switch to disable them. Like AndroMac,
 checks happen at launch and UI entry, plus wake/session activation, at most once per 24 hours.
+Only a check that got an answer counts: a failed one is made again at the next of those events.
 There is no repeating update timer. The manual menu check remains available. The HTTPS endpoint is this repository's stable release asset:
 `https://github.com/anilmetin0/winmouse/releases/latest/download/update.json`.
 GitHub's [release asset download documentation](https://docs.github.com/en/repositories/releasing-projects-on-github/linking-to-releases)

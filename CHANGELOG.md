@@ -9,6 +9,11 @@ and the date, and it becomes the release notes on GitHub.
 
 ## [Unreleased]
 
+### Fixed
+
+- An update check that could not reach GitHub no longer counts as the day's check. WinMouse asks
+  again the next time it starts, the Mac wakes or its menu opens, instead of a day later.
+
 ## [0.3.1] - 2026-11-09
 
 ### Fixed
