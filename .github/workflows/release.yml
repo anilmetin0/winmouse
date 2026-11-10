@@ -42,7 +42,6 @@ jobs:
           name: release-assets
           path: |
             build/WinMouse-*.dmg
-            build/WinMouse-*.dmg.sha256
             build/notes.md
             build/update.json
           if-no-files-found: error
@@ -65,12 +64,11 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
         run: |
-          sha256sum -c WinMouse-*.dmg.sha256
           version="${GITHUB_REF_NAME#v}"
           # Only suffixed versions (1.2.0-beta.1) are prereleases, so releases/latest always has a download.
           release_args=()
           if [[ "$version" == *-* ]]; then release_args+=(--prerelease); fi
-          gh release create "$GITHUB_REF_NAME" WinMouse-*.dmg WinMouse-*.dmg.sha256 \
+          gh release create "$GITHUB_REF_NAME" WinMouse-*.dmg \
             --title "WinMouse $version" --notes-file notes.md --verify-tag "${release_args[@]}"
       - name: Pin the stable Homebrew cask
         if: ${{ !contains(github.ref_name, '-') }}

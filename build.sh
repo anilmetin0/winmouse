@@ -3,7 +3,7 @@
 # cannot run inside a sandboxed shell (it nests its own sandbox for the manifest).
 #   ./build.sh            self-test, then build/WinMouse.app (arm64 + x86_64)
 #   ./build.sh selftest   self-test only
-#   ./build.sh dmg        all of the above, then build/WinMouse-<version>.dmg and its SHA-256
+#   ./build.sh dmg        all of the above, then build/WinMouse-<version>.dmg
 set -euo pipefail
 cd "$(dirname "$0")"
 
@@ -52,7 +52,6 @@ cp -R "$APP" "$STAGE/"
 ln -s /Applications "$STAGE/Applications"
 hdiutil create -quiet -volname "WinMouse $VERSION" -srcfolder "$STAGE" -fs HFS+ -format UDZO -ov "$DMG"
 rm -rf "$STAGE"
-(cd build && shasum -a 256 "$(basename "$DMG")" > "$(basename "$DMG").sha256")
 if [[ "$VERSION" != *-* ]]; then
     python3 scripts/update-manifest.py "$VERSION" "$DMG" > build/update.json
 fi

@@ -1,7 +1,7 @@
 # Releasing
 
 Releases are made from version tags. For a `vX.Y.Z` tag, the `Build and release` workflow runs the
-self-tests, builds the universal app, packs it into `WinMouse-X.Y.Z.dmg` with a SHA-256 file, and
+self-tests, builds the universal app, packs it into `WinMouse-X.Y.Z.dmg`, and
 publishes a GitHub release whose notes are the `X.Y.Z` section of `CHANGELOG.md`. Versions with a
 suffix such as `-beta.1` are marked as prereleases and do not become the latest release.
 
